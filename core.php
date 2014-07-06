@@ -36,8 +36,8 @@ function getPageTitle(){
 function getWebRootDir(){ // 例：/memo
 	return preg_replace('/\/index\.php$/', '', $_SERVER['SCRIPT_NAME']); // SCRIPT_NAME … /memo/index.php   PHP_SELF … /memo/index.php/hoggehoge
 }
-function getWebCoreDir(){ // 例：/memo/filydoc
-	return getWebRootDir() . "/filydoc";
+function getWebCoreDir(){ // 例：/memo/filydoc-core
+	return getWebRootDir() . "/filydoc-core";
 }
 function getCopyright(){
 	global $g_copyright;
