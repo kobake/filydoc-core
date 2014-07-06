@@ -11,7 +11,7 @@ function searchAndGenerateMarkdownText($keyword)
 	// 起動コマンドの構築
 	$dir_path = DATA_ROOT;
 	$cmd = "grep "
-		. " " . "-R -i -n" // recursive, ignore case, line number
+		. " " . "-R -i -n --" // recursive, ignore case, line number
 		. " " . escapeshellarg($keyword)
 		. " " . escapeshellarg($dir_path);
 	
