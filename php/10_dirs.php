@@ -159,7 +159,7 @@ function get_dirs()
 			'type' => 'file',
 			'name' => '404',
 			'webpath' => './404',
-			'realpath' => APP_ROOT . '/404.md'
+			'realpath' => APP_ROOT . '/templates/404.md'
 		);
 		// keywords取得
 		loadKeywords($top, '');
