@@ -102,6 +102,7 @@ function get_dirs()
 {
 	global $g_sitename;
 	global $g_copyright;
+	global $g_ga;
 	global $g_realpath2item;
 	global $g_webpath2item;
 	
@@ -168,6 +169,7 @@ function get_dirs()
 			'dataroot' => DATA_ROOT,
 			'sitename' => getSiteName(),
 			'copyright' => getCopyright(),
+			'ga' => $g_ga,
 			'top' => $top,
 			'realpath2item' => $g_realpath2item,
 			'webpath2item' => $g_webpath2item,
@@ -180,6 +182,7 @@ function get_dirs()
 	$top = $all['top'];
 	$g_sitename = $all['sitename'];
 	$g_copyright = $all['copyright'];
+	$g_ga = $all['ga'];
 	$g_realpath2item = $all['realpath2item'];
 	$g_webpath2item = $all['webpath2item'];
 	return $top['children'];
@@ -207,6 +210,10 @@ function loadKeywords(&$item, $additionalKeywordsString)
 	if(isset($metas['copyright'])){
 		global $g_copyright;
 		$g_copyright = $metas['copyright'];
+	}
+	if(isset($metas['ga'])){
+		global $g_ga;
+		$g_ga = $metas['ga'];
 	}
 	// 子がいれば子のキーワードをロード
 	if(isset($item['children'])){

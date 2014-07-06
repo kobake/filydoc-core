@@ -124,7 +124,7 @@ angular.module('myApp.filter', []);
 app = angular.module('myApp', ['ngRoute', 'myApp.service', 'myApp.directive', 'myApp.filter']);
 
 // 汎用ページローダ
-app.controller('PageController', function ($scope, $http, $location, $compile) {
+app.controller('PageController', function ($scope, $http, $location, $compile, $window) {
 	// 上のinitItemよりこっちが先に呼ばれちゃうことがあるので、ここでも initItems を呼ぶ
 	initItems();
 
@@ -192,6 +192,16 @@ app.controller('PageController', function ($scope, $http, $location, $compile) {
 
 			// 目次
 			generateToc($compile, $scope);
+
+			// analytics
+			if($window['ga']){
+				console.log("new analytics");
+				$window.ga('send', 'pageview', { page: $location.path() }); //new
+			}
+			if($window['_gaq']) {
+				console.log("old analytics");
+				$window._gaq.push(['_trackPageview', $location.path()]); //old
+			}
 
 			// -- ソーシャル -- //
 			if(true){

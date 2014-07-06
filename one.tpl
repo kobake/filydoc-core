@@ -44,6 +44,7 @@
 					{$body nofilter}
 				</div>
 				{* getSocialButtons() nofilter *}
+				{getPageFoot()}
 			</section>
 		</div></div></div>
 	</div>
@@ -71,5 +72,6 @@
 	{*
 	<script src="http://platform.tumblr.com/v1/share.js"></script>
 	*}
+
 </body>
 </html>

@@ -165,5 +165,7 @@
 	<script src="{getWebCoreDir()}/js/tree.js"></script>
 	<script src="{getWebCoreDir()}/js/app.js"></script>
 	<script src="{getWebCoreDir()}/js/other.js"></script>
+	{getAnalytics() nofilter}
+
 </body>
 </html>

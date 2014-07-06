@@ -46,6 +46,28 @@ function getCopyright(){
 	}
 	return $g_copyright;
 }
+function getAnalytics(){
+	global $g_ga;
+	if(isset($g_ga) && $g_ga !== ''){
+		$html = <<<"EOS"
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', '{$g_ga}', 'auto');
+		ga('send', 'pageview');
+	</script>
+EOS;
+		return $html;
+	}
+	return '';
+}
+function getPageFoot(){
+	$html = @file_get_contents(DATA_ROOT . '/_pagefoot.html');
+	if($html === false)return '';
+	return $html;
+}
 
 // 各モジュール
 require_once(APP_ROOT . '/php/00_log.php');
