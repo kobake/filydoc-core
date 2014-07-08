@@ -195,8 +195,8 @@ if(!$one_flag){
 	// $smarty->assign('breadcrumb_html', $breadcrumb_html);
 	$smarty->assign('items_html', $items_html);
 	$smarty->assign('dirs_json', json_encode($dirs));
-	$smarty->display(APP_ROOT . '/frame.tpl');
+	$smarty->display(APP_ROOT . '/templates/frame.tpl');
 }
 else{
-	$smarty->display(APP_ROOT . '/one.tpl');
+	$smarty->display(APP_ROOT . '/templates/one.tpl');
 }

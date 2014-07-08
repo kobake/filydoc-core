@@ -3,6 +3,11 @@ filydoc-core
 
 Core module for [filydoc](https://github.com/kobake/filydoc).
 
+.less compile by grunt
+----------------------
+    $ npm install
+    $ grunt
+
 License
 -------
     The MIT License (MIT)
