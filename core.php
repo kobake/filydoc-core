@@ -144,13 +144,33 @@ foreach($defaults as $key => $value){
 	}
 }
 
+// ※Markdown独自拡張（本来やるべきではないが、さすがにこれは直さざるを得ない）
+// Markdownを処理する前に、URL内のアンダースコアをエスケープする（気持ち悪い…）
+/*
+$text = preg_replace_callback(
+	'/\bhttps?\:\/\/[\w\/\:\;%#\$&\?\(\)~\.=\+\-]+\b/',
+	//'\1<a href="\2">\2</a>',
+	function($m){
+		$url = $m[0];
+		return preg_replace('/\_/', '\\_', $url);
+	},
+	$text
+);
+*/
+
 // 本文Markdown処理
 require_once(APP_ROOT . '/php/libs/markdown.php');
-$body = markdown($text);
+//set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . '/php/libs/php-markdown');
+//use \Michelf\Markdown;
+require_once(APP_ROOT . '/php/libs/php-markdown/Michelf/MarkdownExtra.inc.php');
+$body = Michelf\MarkdownExtra::defaultTransform($text);
+//$body = markdown($text);
 
 // 本文自動リンク処理（Markdown形式）※""で囲まれているURLはAタグの可能性があるので、何もしない
 //$body = preg_replace('/([^\"])(https?\:\/\/[\w\/\:%#\$&\?\(\)~\.=\+\-]+)/', '\1[\2](\2)', $body);
 if(!$search_flag){
+	// URL文字列の途中にアンダースコアが含まれている場合は \ でエスケープする必要がある（気持ち悪い…）
+	// 例：[http://www.iconj.com/iphone\_style\_icon\_generator.php](http://www.iconj.com/iphone_style_icon_generator.php)
 	$body = preg_replace('/([^\"])(https?\:\/\/[\w\/\:\;%#\$&\?\(\)~\.=\+\-]+)/', '\1<a href="\2">\2</a>', $body);
 }
 
