@@ -2,12 +2,18 @@
 
 // 日本語対策 (これをしないと escapeshellarg が日本語を除外してしまう)
 setlocale(LC_CTYPE, "en_US.UTF-8");
+setDefaultTimezone('Asia/Tokyo');
 
 // 定数定義
 define('APP_ROOT', dirname(__FILE__));
 define('DATA_ROOT', realpath(dirname(__FILE__) . '/../data'));
 define('TMP_ROOT', realpath(dirname(__FILE__) . '/../tmp'));
 
+function setDefaultTimezone($timezone) {
+    if (!ini_get('date.timezone')) {
+        date_default_timezone_set($timezone);
+    }
+}
 // #### 仮
 function getSiteName(){ // get_dirs を呼ばないとダメ
 	global $g_sitename;
