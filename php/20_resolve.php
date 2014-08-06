@@ -10,7 +10,9 @@
 function resolveTemplateItem()
 {
 	// webpath解決
-	$webpath = preg_replace('/\.html$/', '', urldecode($_SERVER['REQUEST_URI']));
+	$webpath = urldecode($_SERVER['REQUEST_URI']);
+	$webpath = preg_replace('/\.html$/', '', $webpath);
+	$webpath = preg_replace('/\.md$/', '', $webpath);
 	$webpath = preg_replace('/^' . preg_quote(getWebRootDir(), '/') . '/', '', $webpath); // 頭の /memo を削る
 	global $g_webpath2item;
 	if(isset($g_webpath2item[$webpath])){

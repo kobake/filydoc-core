@@ -120,7 +120,10 @@ function frameContent()
 $uri_without_query = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
 $one_flag = false;
 if(preg_match('/\.html$/', $uri_without_query)){ //「.html」で終わる場合
-	$one_flag = true;
+	$one_flag = 'html';
+}
+else if(preg_match('/\.md$/', $uri_without_query)){ //「.md」で終わる場合
+	$one_flag = 'md';
 }
 
 // 検索ページかどうかを判定
@@ -190,7 +193,20 @@ else{
 	$text = loadText($templateItem);
 }
 
-// -- -- META情報読み取り -- -- //
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// そのまま出力する場合
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+if($one_flag == 'md'){
+	header('Content-type: text/plain; charset=UTF-8');
+	echo $text;
+	exit(0);
+}
+
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// コンテンツMETA情報
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // meta情報読み取り
 global $metas;
 $metas = readMetas($text);
@@ -217,7 +233,9 @@ foreach($defaults as $key => $value){
 	}
 }
 
-// -- -- HTML変換処理 -- -- //
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// コンテンツHTML変換
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // 本文Markdown処理
 $body = Michelf\MarkdownExtra::defaultTransform($text);
 
@@ -273,6 +291,6 @@ if(!$one_flag){
 	$smarty->assign('dirs_json', json_encode($dirs));
 	$smarty->display(APP_ROOT . '/templates/frame.tpl');
 }
-else{
+else if($one_flag == 'html'){
 	$smarty->display(APP_ROOT . '/templates/one.tpl');
 }
