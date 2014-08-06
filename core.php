@@ -9,6 +9,9 @@ define('APP_ROOT', dirname(__FILE__));
 define('DATA_ROOT', realpath(dirname(__FILE__) . '/../data'));
 define('TMP_ROOT', realpath(dirname(__FILE__) . '/../tmp'));
 
+// セッション開始
+session_start();
+
 function setDefaultTimezone($timezone) {
     if (!ini_get('date.timezone')) {
         date_default_timezone_set($timezone);
@@ -132,8 +135,17 @@ if($uri_without_query == getWebRootDir() . '/login.html' || $uri_without_query =
 	$login_flag = true;
 }
 
+// ログアウトページかどうかを判定
+if($uri_without_query == getWebRootDir() . '/logout') {
+	// セッションを破棄し、
+	$_SESSION = array();
+	session_destroy();
+	// リダイレクト
+	header("Location: /");
+	exit(0);
+}
+
 // GitHubログインかどうかを判定
-session_start();
 if($uri_without_query == getWebRootDir() . '/login_github'){
 	// 一旦セッションは破棄
 	$_SESSION = array();
