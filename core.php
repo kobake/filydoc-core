@@ -75,6 +75,15 @@ function getPageFoot(){
 	return $html;
 }
 
+// 設定のロード
+if(!file_exists(APP_ROOT . '/settings.php')){
+	print("Error: settings.php not found. Make settings.php by settings.php.example.");
+	exit(1);
+}
+else{
+	require_once(APP_ROOT . '/settings.php');
+}
+
 // 各モジュール
 require_once(APP_ROOT . '/php/00_log.php');
 require_once(APP_ROOT . '/php/10_dirs.php');
@@ -86,6 +95,8 @@ require_once(APP_ROOT . '/php/60_menu.php');
 require_once(APP_ROOT . '/php/80_search.php');
 require_once(APP_ROOT . '/php/90_smarty.php');
 require_once(APP_ROOT . '/php/95_social.php');
+require_once(APP_ROOT . '/php/96_github.php');
+
 // Markdown Extra
 require_once(APP_ROOT . '/php/libs/markdown.php');
 //set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . '/php/libs/php-markdown');
@@ -119,6 +130,13 @@ if($uri_without_query == getWebRootDir() . '/search.html' || $uri_without_query 
 $login_flag = false;
 if($uri_without_query == getWebRootDir() . '/login.html' || $uri_without_query == getWebRootDir() . '/login'){
 	$login_flag = true;
+}
+
+// GitHubログインかどうかを判定
+if($uri_without_query == getWebRootDir() . '/login_github'){
+	$github = new GitHub();
+	$github->signup();
+	exit(0);
 }
 
 // まず全階層を漁る (これは常に必要。単一ページの場合でもパス解決のために必要)
