@@ -24,7 +24,7 @@
 			<section id="content-section">
 				<div ng-controller="RightController">
 					<div class="page-control">
-						<a href="#" ng-click="editBegin();">
+						<a href="#" ng-click="editBegin();" id="page-edit">
 							<i class="glyphicon glyphicon-edit"></i>Edit
 						</a>
 					</div>

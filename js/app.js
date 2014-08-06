@@ -105,11 +105,32 @@ function SearchController($scope, $location) {
 	// };
 }
 
-function RightController($scope, $location){
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// Right controller
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+function RightController($scope, $location, $compile){
 	// 編集開始
 	$scope.editBegin = function(){
 		console.log("hogehogehogehoge");
+		// 編集領域の部品を作る
+		var frame = jQuery('<div style="margin-left: -40px;"></div>');
+		frame.append(jQuery('<div><textarea style="width:100%; height: 300px;"></textarea></div>'));
+		var bottom = jQuery('<div style="margin-top: 2px;"></div>');
+		bottom.append(jQuery('<button class="btn btn-default" ng-click="editSave();" style="width: 100px; margin-right: 8px;">Save</button>'));
+		bottom.append(jQuery('<button class="btn btn-default" ng-click="editCancel();" style="width: 100px;">Cancel</button>'));
+		frame.append(bottom);
+
+		// コンパイル
+		var html = $compile(frame[0].outerHTML)($scope);
+
+		// 差し替え
+		var content = jQuery('.page-content');
+		content.html(html);
+
+		// フッタ
+		window.footerFixed();
 	};
+
 }
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
