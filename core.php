@@ -133,10 +133,22 @@ if($uri_without_query == getWebRootDir() . '/login.html' || $uri_without_query =
 }
 
 // GitHubログインかどうかを判定
+session_start();
 if($uri_without_query == getWebRootDir() . '/login_github'){
+	// 一旦セッションは破棄
+	$_SESSION = array();
+	session_destroy();
+	session_start(); // 再開
+	// OAuth2.0認証
 	$github = new GitHub();
-	$github->signup();
+	$username = $github->signup();
+	// ユーザ名が取得できたら、セッションに保存してリダイレクト
+	$_SESSION['github_username'] = $username;
+	header("Location: /");
 	exit(0);
+}
+if(!isset($_SESSION['github_username'])){
+	$_SESSION['github_username'] = '';
 }
 
 // まず全階層を漁る (これは常に必要。単一ページの場合でもパス解決のために必要)
@@ -242,6 +254,7 @@ $smarty->cache_dir = TMP_ROOT . '/smarty/cache/';
 $smarty->assign('metas', $metas);
 $smarty->assign('body', $body);
 $smarty->assign('dirs', $dirs);
+$smarty->assign('username', $_SESSION['github_username']);
 if(!$one_flag){
 	// $smarty->assign('breadcrumb_html', $breadcrumb_html);
 	$smarty->assign('items_html', $items_html);

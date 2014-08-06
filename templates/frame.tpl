@@ -95,9 +95,22 @@
 					-->
 
 					<ul class="nav navbar-nav pull-right">
-						<li>
-							<a href="/login" >Login</a>
-						</li>
+						{if $username == ''}
+							<li>
+								<a href="/login" >Log in</a>
+							</li>
+						{else}
+							<li>
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									{$username} <span class="caret"></span>
+								</a>
+								<div class="dropdown-menu" style="min-width: 90px;">
+									<div class="col-sm-12">
+										<a href="/logout" target="_self">Log out</a>
+									</div>
+								</div>
+							</li>
+						{/if}
 					</ul>
 
 						<!--
