@@ -105,6 +105,13 @@ function SearchController($scope, $location) {
 	// };
 }
 
+function RightController($scope, $location){
+	// 編集開始
+	$scope.editBegin = function(){
+		console.log("hogehogehogehoge");
+	};
+}
+
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // もうちょっと大きいモジュールおよびコントローラの例
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
@@ -188,7 +195,9 @@ app.controller('PageController', function ($scope, $http, $location, $compile, $
 	$http.get(htmlpath)
 		.success(function (data, status, headers, config) {
 			// コンテンツ更新
-			$('#content-section').replaceWith($(data).find('#content-section'));
+			//$('#content-section').replaceWith($(data).find('#content-section'));
+			var html = $(data).find('#content-section').html();
+			$('#content-section').html($compile(html)($scope));
 
 			// 目次
 			generateToc($compile, $scope);

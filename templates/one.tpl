@@ -22,29 +22,36 @@
 		<!-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
 		<div id="page-content-wrapper"><div><div id="right-wrapper">
 			<section id="content-section">
-				<div class="content-header">
-					<h1>
-						{$metas['h1title']}
-					</h1>
-				</div>
-				<div class="page-content inset">
-					<!-- 内部目次 -->
-					<div class="toc">
-						<div class="toc-title">
-							Contents
-						</div>
-						<div class="toc-content">
-							<ol>
-							</ol>
-						</div>
+				<div ng-controller="RightController">
+					<div class="page-control">
+						<a href="#" ng-click="editBegin();">
+							<i class="glyphicon glyphicon-edit"></i>Edit
+						</a>
 					</div>
-					<div class="toc-dummy">
+					<div class="content-header">
+						<h1>
+							{$metas['h1title']}
+						</h1>
 					</div>
-					<!-- 本体 -->
-					{$body nofilter}
+					<div class="page-content inset">
+						<!-- 内部目次 -->
+						<div class="toc">
+							<div class="toc-title">
+								Contents
+							</div>
+							<div class="toc-content">
+								<ol>
+								</ol>
+							</div>
+						</div>
+						<div class="toc-dummy">
+						</div>
+						<!-- 本体 -->
+						{$body nofilter}
+					</div>
+					{* getSocialButtons() nofilter *}
+					{getPageFoot()}
 				</div>
-				{* getSocialButtons() nofilter *}
-				{getPageFoot()}
 			</section>
 		</div></div></div>
 	</div>
