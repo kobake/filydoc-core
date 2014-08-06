@@ -86,6 +86,11 @@ require_once(APP_ROOT . '/php/60_menu.php');
 require_once(APP_ROOT . '/php/80_search.php');
 require_once(APP_ROOT . '/php/90_smarty.php');
 require_once(APP_ROOT . '/php/95_social.php');
+// Markdown Extra
+require_once(APP_ROOT . '/php/libs/markdown.php');
+//set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . '/php/libs/php-markdown');
+//use \Michelf\Markdown;
+require_once(APP_ROOT . '/php/libs/php-markdown/Michelf/MarkdownExtra.inc.php');
 
 function frameContent()
 {
@@ -110,11 +115,23 @@ if($uri_without_query == getWebRootDir() . '/search.html' || $uri_without_query 
 	$search_flag = true;
 }
 
+// ログインページかどうかを判定
+$login_flag = false;
+if($uri_without_query == getWebRootDir() . '/login.html' || $uri_without_query == getWebRootDir() . '/login'){
+	$login_flag = true;
+}
+
 // まず全階層を漁る (これは常に必要。単一ページの場合でもパス解決のために必要)
 $dirs = [];
 $jsitems = [];
 $dirs = get_dirs();
 
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// コンテンツロード
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// ### 要改善: AJAX処理により多重にコンテンツロードが走っている
+
+// -- -- 生テキスト取得 -- -- //
 // ディスパッチ処理
 // ※セキュリティ：リアルファイルにアクセスするため、ホスト内のpublic_html以外のファイルが参照されないように気を付けること
 parse_str($_SERVER['QUERY_STRING'], $query);
@@ -122,12 +139,16 @@ if($search_flag){
 	// 検索結果をmarkdown形式で取得
 	$text = searchAndGenerateMarkdownText($query['q']);
 }
+else if($login_flag){
+	$text = 'login';
+}
 else{
 	$templateItem = resolveTemplateItem();
 	// テキストロード
 	$text = loadText($templateItem);
 }
 
+// -- -- META情報読み取り -- -- //
 // meta情報読み取り
 global $metas;
 $metas = readMetas($text);
@@ -136,8 +157,12 @@ $metas = readMetas($text);
 $defaults = [];
 $defaults['description'] = '';
 if($search_flag){
-	$defaults['headtitle'] = '検索結果: ' . $query['q'] . ' - ' . getSiteName();
-	$defaults['h1title'] = '検索結果: ' . $query['q'];
+	$defaults['headtitle'] = 'SearchResult: ' . $query['q'] . ' - ' . getSiteName();
+	$defaults['h1title'] = 'SearchResult: ' . $query['q'];
+}
+else if($login_flag){
+	$defaults['headtitle'] = 'Login';
+	$defaults['h1title'] = 'Login';
 }
 else{
 	$title_items = getTitleItems();
@@ -150,28 +175,14 @@ foreach($defaults as $key => $value){
 	}
 }
 
-// ※Markdown独自拡張（本来やるべきではないが、さすがにこれは直さざるを得ない）
-// Markdownを処理する前に、URL内のアンダースコアをエスケープする（気持ち悪い…）
-/*
-$text = preg_replace_callback(
-	'/\bhttps?\:\/\/[\w\/\:\;%#\$&\?\(\)~\.=\+\-]+\b/',
-	//'\1<a href="\2">\2</a>',
-	function($m){
-		$url = $m[0];
-		return preg_replace('/\_/', '\\_', $url);
-	},
-	$text
-);
-*/
-
+// -- -- HTML変換処理 -- -- //
 // 本文Markdown処理
-require_once(APP_ROOT . '/php/libs/markdown.php');
-//set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . '/php/libs/php-markdown');
-//use \Michelf\Markdown;
-require_once(APP_ROOT . '/php/libs/php-markdown/Michelf/MarkdownExtra.inc.php');
 $body = Michelf\MarkdownExtra::defaultTransform($text);
-//$body = markdown($text);
 
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// コンテンツ加工
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // 本文自動リンク処理（Markdown形式）※""で囲まれているURLはAタグの可能性があるので、何もしない
 //$body = preg_replace('/([^\"])(https?\:\/\/[\w\/\:%#\$&\?\(\)~\.=\+\-]+)/', '\1[\2](\2)', $body);
 if(!$search_flag){
@@ -180,6 +191,18 @@ if(!$search_flag){
 	$body = preg_replace('/([^\"])(https?\:\/\/[\w\/\:\;%#\$&\?\(\)~\.=\+\-]+)/', '\1<a href="\2">\2</a>', $body);
 }
 
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// 特殊ページ処理
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+if($login_flag){
+	$body = file_get_contents(APP_ROOT . '/templates/login.tpl');
+}
+
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// メニュー部構築
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // メニューHTML
 global $g_items;
 $g_items = array();
@@ -187,6 +210,10 @@ if(!$one_flag){
 	$items_html = get_items_html($dirs);
 }
 
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// 全体構築
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // Smarty処理
 $smarty = MySmarty::getInstance();
 $smarty->php_handling = Smarty::PHP_ALLOW;
