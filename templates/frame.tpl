@@ -94,7 +94,41 @@
 						</ul>
 					-->
 
+					<ul class="nav navbar-nav pull-right">
+						<li>
+							<a href="/login" >Login</a>
+						</li>
+					</ul>
+
+						<!--
+					<div class="navbar-right">
+						<div class="btn-group">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Login <span class="caret"></span>
+							</a>
+							<div class="dropdown-menu" >
+								<div class="col-sm-12">
+									<div class="col-sm-12">
+										Login
+									</div>
+									<div class="col-sm-12">
+										<input type="text" placeholder="Uname or Email" onclick="return false;" class="form-control input-sm" id="inputError" />
+									</div>
+									<br/>
+									<div class="col-sm-12">
+										<input type="password" placeholder="Password" class="form-control input-sm" name="password" id="Password1" />
+									</div>
+									<div class="col-sm-12">
+										<button type="submit" class="btn btn-success btn-sm">Sign in</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					-->
+
 				</div>
+
 			</div>
 		</nav>
 		<!-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->

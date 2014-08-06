@@ -23,6 +23,8 @@
 }
 .container {
   margin-left: 20px;
+  margin-right: 20px;
+  width: inherit;
 }
 #search-keyword {
   color: #444;
