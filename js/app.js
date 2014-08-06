@@ -106,15 +106,78 @@ function SearchController($scope, $location) {
 }
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// パス加工
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// @param  String ext [in] 拡張子。例：md  例：html
+// @return String AJAX取得用パス。例：/Windows/Excel.html
+function getWebPathForAjax($location, ext){
+	// webpath
+	var webpath = $location.path(); // "/memo/Windows/Excel" みたいな感じ。
+	webpath = webpath.replace(/\/$/, '');
+	if (webpath == '') {
+		webpath = window.g_webroot;
+	}
+	console.log("webpath = " + webpath);
+
+	// webpath2 "/Windows/Excel"
+	var webpath2 = webpath;
+	if(webpath2.indexOf(window.g_webroot) == 0){
+		webpath2 = webpath2.replace(new RegExp(window.g_webroot), ''); // "/Windows/Excel"
+	}
+	console.log("webpath2 = " + webpath2);
+
+	// ajaxpath
+	var ajaxpath = webpath;
+	if (ajaxpath == window.g_webroot) {
+		ajaxpath = window.g_webroot + '/index';
+	}
+	ajaxpath += '.' + ext;
+	console.log("ajaxpath = " + ajaxpath);
+
+	// 検索キーワード
+	var q = $location.search().q;
+	if (typeof q != 'undefined' && q !== '') {
+		ajaxpath += '?q=' + q;
+		// 検索ボックスに q を入れておく
+		$('#search-keyword').val(q);
+	}
+	else{
+		jQuery('#search-keyword').val('');
+	}
+
+	//$location.
+	var menu = window.g_webpath2item[webpath2];
+	if (menu) {
+		if (menu.type == 'dir') {
+			ajaxpath = (window.g_webroot + webpath2 + '/index.' + ext).replace('//', '/'); // 例：/memo/Chrome.html
+		}
+	}
+	console.log("url = " + $location.url());   // スラッシュから始まる。こっちはURLエンコーディングされてる。あと、ハッシュが付いてる。
+	console.log("path = " + $location.path()); // スラッシュから始まる。こっちは生文字列。ハッシュは付いてない。★こっちをパンくずに使う
+	console.log("absUrl = " + $location.absUrl()); // httpから始まる。クエリ文字列も付いてくる
+	console.log("search = " + $location.search()); // クエリ文字列をハッシュにしたやつ。 {q: 'ほげ'} みたいな感じ。
+	console.log($location.search());
+	console.log("search.q = " + $location.search().q);
+//	console.log($location.search('q'));
+	return ajaxpath;
+}
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // Right controller
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
-function RightController($scope, $location, $compile){
+function RightController($scope, $location, $compile, $http){
 	// 編集開始
-	$scope.editBegin = function(){
-		console.log("hogehogehogehoge");
+	$scope.editBegin = function() {
+		console.log("editBegin.");
+
+		// 既に編集モードなら何もしない
+		if (jQuery('#edit-textarea').size() >= 1) {
+			return;
+		}
+
 		// 編集領域の部品を作る
 		var frame = jQuery('<div style="margin-left: -40px;"></div>');
-		frame.append(jQuery('<div><textarea style="width:100%; height: 300px;"></textarea></div>'));
+		frame.append(jQuery('<div><textarea id="edit-textarea" style="width:100%; height: 300px;"></textarea></div>'));
 		var bottom = jQuery('<div style="margin-top: 2px;"></div>');
 		bottom.append(jQuery('<button class="btn btn-default" ng-click="editSave();" style="width: 100px; margin-right: 8px;">Save</button>'));
 		bottom.append(jQuery('<button class="btn btn-default" ng-click="editCancel();" style="width: 100px;">Cancel</button>'));
@@ -125,12 +188,42 @@ function RightController($scope, $location, $compile){
 
 		// 差し替え
 		var content = jQuery('.page-content');
+		$scope.original_html = content.html();
 		content.html(html);
 
 		// フッタ
 		window.footerFixed();
+
+		// 内容取得
+		$scope.load();
+	}
+
+	// ロード
+	$scope.load = function(){
+		// 内容取得
+		var ajaxpath = getWebPathForAjax($location, 'md');
+		console.log("Get content from " + ajaxpath);
+		$http.get(ajaxpath)
+			.error(function (data, status, headers, config) {
+				$('#edit-textarea').val("error");
+			})
+			.success(function (data, status, headers, config) {
+				$('#edit-textarea').val(data);
+			});
 	};
 
+	// 編集確定
+	$scope.editSave = function(){
+		console.log("editSave.");
+	};
+
+	// 編集キャンセル
+	$scope.editCancel = function(){
+		console.log("editCancel.");
+		var content = jQuery('.page-content');
+		content.html($scope.original_html);
+		delete($scope.original_html);
+	};
 }
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
@@ -163,57 +256,16 @@ app.controller('PageController', function ($scope, $http, $location, $compile, $
 	console.log("$location.absUrl() = " + $location.absUrl());
 	console.log("$location.path() = " + $location.path());
 	*/
-	// webpath
-	var webpath = $location.path(); // "/memo/Windows/Excel" みたいな感じ。
-	webpath = webpath.replace(/\/$/, '');
-	if (webpath == '') {
-		webpath = window.g_webroot;
-	}
-	console.log("webpath = " + webpath);
-
-	// webpath2 "/Windows/Excel"
-	var webpath2 = webpath;
-	if(webpath2.indexOf(window.g_webroot) == 0){
-		webpath2 = webpath2.replace(new RegExp(window.g_webroot), ''); // "/Windows/Excel"
-	}
-	console.log("webpath2 = " + webpath2);
-
-	// htmlpath
-	var htmlpath = webpath;
-	if (htmlpath == window.g_webroot) {
-		htmlpath = window.g_webroot + '/index';
-	}
-	htmlpath += '.html';
-	console.log("htmlpath = " + htmlpath);
-
-	// 検索キーワード
-	var q = $location.search().q;
-	if (typeof q != 'undefined' && q !== '') {
-		htmlpath += '?q=' + q;
-		// 検索ボックスに q を入れておく
-		$('#search-keyword').val(q);
-	}
-	else{
-		jQuery('#search-keyword').val('');
-	}
-
-	//$location.
-	var menu = window.g_webpath2item[webpath2];
-	if (menu) {
-		if (menu.type == 'dir') {
-			htmlpath = (window.g_webroot + webpath2 + '/index.html').replace('//', '/'); // 例：/memo/Chrome.html
-		}
-	}
-	console.log("Get content from " + htmlpath);
-	console.log("url = " + $location.url());   // スラッシュから始まる。こっちはURLエンコーディングされてる。あと、ハッシュが付いてる。
-	console.log("path = " + $location.path()); // スラッシュから始まる。こっちは生文字列。ハッシュは付いてない。★こっちをパンくずに使う
-	console.log("absUrl = " + $location.absUrl()); // httpから始まる。クエリ文字列も付いてくる
-	console.log("search = " + $location.search()); // クエリ文字列をハッシュにしたやつ。 {q: 'ほげ'} みたいな感じ。
-	console.log($location.search());
-	console.log("search.q = " + $location.search().q);
-//	console.log($location.search('q'));
 	// ここで非同期通信
-	$http.get(htmlpath)
+	var ajaxpath = getWebPathForAjax($location, 'html');
+	console.log("Get content from " + ajaxpath);
+	$http.get(ajaxpath)
+		.error(function (data, status, headers, config) {
+			// コンテンツ更新
+			$('#content-section').html("<div style='margin:20px;'>Content not found</div>");
+			// タイトル更新
+			$('head title').text('not found - ' + window.g_sitename);
+		})
 		.success(function (data, status, headers, config) {
 			// コンテンツ更新
 			//$('#content-section').replaceWith($(data).find('#content-section'));
@@ -363,12 +415,6 @@ app.controller('PageController', function ($scope, $http, $location, $compile, $
 				treeScroll(this_li, top_li);
 			}
 			window.already_scrolled = true;
-		})
-		.error(function (data, status, headers, config) {
-			// コンテンツ更新
-			$('#content-section').html("<div style='margin:20px;'>Content not found</div>");
-			// タイトル更新
-			$('head title').text('not found - ' + window.g_sitename);
 		});
 });
 
