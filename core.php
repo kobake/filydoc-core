@@ -141,7 +141,7 @@ if($uri_without_query == getWebRootDir() . '/login.html' || $uri_without_query =
 	// GitHubログイン機能が無効な場合はログインページ自体を表示しない
 	if(!GitHubSettings::ENABLED){
 		$url = getWebRootDir();
-		header("Location: $url");
+		header("Location: {$url}/");
 		exit(0);
 	}
 }
@@ -153,7 +153,7 @@ if($uri_without_query == getWebRootDir() . '/logout') {
 	session_destroy();
 	// リダイレクト
 	$url = getWebRootDir();
-	header("Location: $url");
+	header("Location: {$url}/");
 	exit(0);
 }
 
@@ -170,7 +170,7 @@ if(GitHubSettings::ENABLED) {
 		// ユーザ名が取得できたら、セッションに保存してリダイレクト
 		$_SESSION['github_username'] = $username;
 		$url = getWebRootDir();
-		header("Location: $url");
+		header("Location: {$url}/");
 		exit(0);
 	}
 	if (!isset($_SESSION['github_username'])) {
