@@ -1,7 +1,10 @@
 <p>
-	You can edit contents after log in if you are an administrator of this site,
+	For administrators.
 </p>
 <p>
+	You can edit contents after log in if you are an administrator of this site,
+</p>
+<p style="margin-top: 16px;">
 	<a class="btn btn-default"
 		data-event_name="Login"
 		data-login__type="GitHub"
