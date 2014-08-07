@@ -148,6 +148,18 @@ div.page-control i {
   overflow: hidden;
   display: none;
 }
+#page-edit {
+  float: left;
+}
+.error-message-right {
+  font-size: 10pt;
+  color: #844;
+  display: inline-block;
+  float: left;
+  margin-left: 16px;
+  line-height: 20px;
+  color: #e22;
+}
 .breadcrumb {
   background-color: inherit;
   white-space: nowrap;

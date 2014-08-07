@@ -24,16 +24,23 @@
 			<section id="content-section">
 				<div ng-controller="RightController">
 					{if isAdminUser()}
-					<div class="page-control">
+					<div class="page-control clearfix">
 						<a href="#" ng-click="editBegin();" id="page-edit">
 							<i class="glyphicon glyphicon-edit"></i>Edit
 						</a>
+						{if !$page_writable}
+							<div id="error-message-writable-right" class="error-message-right">
+								#Warning: this file has no permission to write.
+							</div>
+						{/if}
 					</div>
 					{/if}
 
+					<!--
 					<div id="error-message-writable" class="error-message">
 						Empty
 					</div>
+					-->
 					<div id="error-message" class="error-message">
 						Empty2
 					</div>
