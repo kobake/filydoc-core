@@ -135,7 +135,7 @@ div.page-control {
 div.page-control i {
   margin-right: 2px;
 }
-#error-message {
+.error-message {
   margin-top: 8px;
   margin-left: 20px;
   margin-right: 20px;

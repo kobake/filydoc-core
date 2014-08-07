@@ -175,31 +175,16 @@ function RightController($scope, $location, $compile, $http){
 			return;
 		}
 
-		// 編集領域の部品を作る
-		var frame = jQuery('<div style="margin-left: -40px;"></div>');
-		frame.append(jQuery('<div><textarea id="edit-textarea" style="width:100%; height: 300px;"></textarea></div>'));
-		var bottom = jQuery('<div style="margin-top: 2px;"></div>');
-		bottom.append(jQuery('<button class="btn btn-default" ng-click="editSave();" style="width: 100px; margin-right: 8px;">Save</button>'));
-		bottom.append(jQuery('<button class="btn btn-default" ng-click="editCancel();" style="width: 100px;">Cancel</button>'));
-		frame.append(bottom);
-
-		// コンパイル
-		var html = $compile(frame[0].outerHTML)($scope);
-
-		// 差し替え
-		var content = jQuery('.page-content');
-		$scope.original_html = content.html();
-		content.html(html);
-
-		// フッタ
-		window.footerFixed();
-
 		// 内容取得
-		$scope.load();
+		$scope.loadMarkdown();
 	}
 
 	// ロード
-	$scope.load = function(){
+	$scope.loadMarkdown = function(){
+		// 一旦エラーメッセージは隠す
+		$('#error-message').hide();
+		$('#error-message-writable').hide();
+
 		// 内容取得
 		var ajaxpath = getWebPathForAjax($location, 'md');
 		console.log("Get content from " + ajaxpath);
@@ -208,13 +193,50 @@ function RightController($scope, $location, $compile, $http){
 				$('#edit-textarea').val("error");
 			})
 			.success(function (data, status, headers, config) {
-				$('#edit-textarea').val(data);
+				// 既に編集モードなら何もしない
+				if (jQuery('#edit-textarea').size() >= 1) {
+					return;
+				}
+
+				// データ解釈：1行目(WRITABLE or NOT_WRITABLE)
+				var lines = data.split("\n");
+				var writable = lines.shift();
+				if(writable === 'NOT_WRITABLE'){
+					$('#error-message-writable').text('Warning: this file has no permission to write.');
+					$('#error-message-writable').show();
+				}
+
+				// データ解釈：それ以降(MARKDOWN)
+				var text = lines.join("\n");
+
+				// 編集領域の部品を作る
+				var frame = jQuery('<div style="margin-left: -40px;"></div>');
+				frame.append(jQuery('<div><textarea id="edit-textarea" style="width:100%; height: 300px;"></textarea></div>'));
+				var bottom = jQuery('<div style="margin-top: 2px;"></div>');
+				bottom.append(jQuery('<button class="btn btn-default" ng-click="editSave();" style="width: 100px; margin-right: 8px;">Save</button>'));
+				bottom.append(jQuery('<button class="btn btn-default" ng-click="editCancel();" style="width: 100px;">Cancel</button>'));
+				frame.append(bottom);
+
+				// コンパイル
+				var html = $compile(frame[0].outerHTML)($scope);
+
+				// 差し替え
+				var content = jQuery('.page-content');
+				$scope.original_html = content.html();
+				content.html(html);
+
+				// 中身
+				$('#edit-textarea').val(text);
+
+				// フッタ
+				window.footerFixed();
 			});
 	};
 
 	// 編集確定
 	$scope.editSave = function(){
 		console.log("editSave.");
+
 		// エラーメッセージは一度隠す
 		$('#error-message').hide();
 
@@ -250,9 +272,16 @@ function RightController($scope, $location, $compile, $http){
 	// 編集キャンセル
 	$scope.editCancel = function(){
 		console.log("editCancel.");
+		// Writableエラーは隠す
+		$('#error-message-writable').hide();
+
+		// 元のHTMLに戻す
 		var content = jQuery('.page-content');
 		content.html($scope.original_html);
 		delete($scope.original_html);
+
+		// フッタ
+		window.footerFixed();
 	};
 }
 

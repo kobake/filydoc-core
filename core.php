@@ -232,8 +232,12 @@ if($templateItem && $one_flag == 'md' && $_SERVER['REQUEST_METHOD'] == 'PUT') {
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // そのまま出力する場合
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+$page_writable = $templateItem && is_writable($templateItem['realpath']);
 if($one_flag == 'md'){
 	header('Content-type: text/plain; charset=UTF-8');
+	// 最初の行はwritableかどうか
+	echo $page_writable ? "WRITABLE\n" : "NOT_WRITABLE\n";
+	// 続けて中身
 	echo $text;
 	exit(0);
 }
@@ -320,6 +324,7 @@ $smarty->assign('metas', $metas);
 $smarty->assign('body', $body);
 $smarty->assign('dirs', $dirs);
 $smarty->assign('username', $_SESSION['github_username']);
+$smarty->assign('page_writable', $page_writable);
 if(!$one_flag){
 	// $smarty->assign('breadcrumb_html', $breadcrumb_html);
 	$smarty->assign('items_html', $items_html);

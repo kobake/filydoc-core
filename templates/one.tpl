@@ -28,9 +28,14 @@
 							<i class="glyphicon glyphicon-edit"></i>Edit
 						</a>
 					</div>
-					<div id="error-message">
-						Error message
+
+					<div id="error-message-writable" class="error-message">
+						Empty
 					</div>
+					<div id="error-message" class="error-message">
+						Empty2
+					</div>
+
 					<div class="content-header">
 						<h1>
 							{$metas['h1title']}
