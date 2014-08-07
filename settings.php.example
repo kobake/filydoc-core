@@ -2,9 +2,18 @@
 
 // GitHub OAuth settings
 class GitHubSettings{
-	const FLAG          = false; // true: Use GitHub OAuth.  false: Don't use GitHub OAuth.
-	const CLIENT_ID     = 'xxxxx';
-	const CLIENT_SECRET = 'xxxxx';
-	const REDIRECT_URL  = 'http://xxxxx';
-	const USER_AGENT    = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:13.0) Gecko/20100101 Firefox/13.0.1';
+	// GitHub login support flag.
+	//    true: Use GitHub login.
+	//   false: Don't use GitHub login.
+	const ENABLED        = false;
+
+	// GitHub OAuth information
+	const CLIENT_ID      = 'xxxxx';
+	const CLIENT_SECRET  = 'xxxxx';
+	const REDIRECT_URL   = 'http://xxxxx';
+	const USER_AGENT     = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:13.0) Gecko/20100101 Firefox/13.0.1';
+
+	// GitHub accounts allowed to edit contents; comma separated list.
+	//   Ex) "kobake,john,koji"
+	const ACCOUNTS_ADMIN = "kobake";
 }

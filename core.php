@@ -98,7 +98,9 @@ require_once(APP_ROOT . '/php/60_menu.php');
 require_once(APP_ROOT . '/php/80_search.php');
 require_once(APP_ROOT . '/php/90_smarty.php');
 require_once(APP_ROOT . '/php/95_social.php');
-require_once(APP_ROOT . '/php/96_github.php');
+if(GitHubSettings::ENABLED){
+	require_once(APP_ROOT . '/php/96_github.php');
+}
 
 // Markdown Extra
 require_once(APP_ROOT . '/php/libs/markdown.php');
@@ -136,6 +138,11 @@ if($uri_without_query == getWebRootDir() . '/search.html' || $uri_without_query 
 $login_flag = false;
 if($uri_without_query == getWebRootDir() . '/login.html' || $uri_without_query == getWebRootDir() . '/login'){
 	$login_flag = true;
+	// GitHubログイン機能が無効な場合はログインページ自体を表示しない
+	if(!GitHubSettings::ENABLED){
+		header('location: /');
+		exit(0);
+	}
 }
 
 // ログアウトページかどうかを判定
@@ -149,27 +156,47 @@ if($uri_without_query == getWebRootDir() . '/logout') {
 }
 
 // GitHubログインかどうかを判定
-if($uri_without_query == getWebRootDir() . '/login_github'){
-	// 一旦セッションは破棄
-	$_SESSION = array();
-	session_destroy();
-	session_start(); // 再開
-	// OAuth2.0認証
-	$github = new GitHub();
-	$username = $github->signup();
-	// ユーザ名が取得できたら、セッションに保存してリダイレクト
-	$_SESSION['github_username'] = $username;
-	header("Location: /");
-	exit(0);
-}
-if(!isset($_SESSION['github_username'])){
-	$_SESSION['github_username'] = '';
+if(GitHubSettings::ENABLED) {
+	if ($uri_without_query == getWebRootDir() . '/login_github') {
+		// 一旦セッションは破棄
+		$_SESSION = array();
+		session_destroy();
+		session_start(); // 再開
+		// OAuth2.0認証
+		$github = new GitHub();
+		$username = $github->signup();
+		// ユーザ名が取得できたら、セッションに保存してリダイレクト
+		$_SESSION['github_username'] = $username;
+		header("Location: /");
+		exit(0);
+	}
+	if (!isset($_SESSION['github_username'])) {
+		$_SESSION['github_username'] = '';
+	}
 }
 
 // まず全階層を漁る (これは常に必要。単一ページの場合でもパス解決のために必要)
 $dirs = [];
 $jsitems = [];
 $dirs = get_dirs();
+
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// 権限関連関数
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// 自分が管理者かどうか判定
+function isAdminUser(){
+	if(!GitHubSettings::ENABLED)return false;
+	if($_SESSION['github_username'] == '')return false;
+	$admin_accounts = explode(',', GitHubSettings::ADMIN_ACCOUNTS);
+	if(in_array($_SESSION['github_username'], $admin_accounts)){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // コンテンツロード
@@ -202,6 +229,16 @@ if($templateItem && $one_flag == 'md' && $_SERVER['REQUEST_METHOD'] == 'PUT') {
 	header('Content-type: application/json; charset=UTF-8');
 	// print(var_export($_SERVER, true) . "\n");
 	// print(var_export($_POST, true) . "\n");
+
+	// 管理者でなければPUTを受け付けない
+	if(!isAdminUser()){
+		$result = array(
+			'result' => 'FAILURE',
+			'error' => 'You are not administrator'
+		);
+		echo json_encode($result);
+		exit(0);
+	}
 
 	// putデータ受け取り
 	$input = file_get_contents("php://input");
@@ -309,7 +346,6 @@ if(!$one_flag){
 	$items_html = get_items_html($dirs);
 }
 
-
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // 全体構築
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
@@ -323,7 +359,13 @@ $smarty->cache_dir = TMP_ROOT . '/smarty/cache/';
 $smarty->assign('metas', $metas);
 $smarty->assign('body', $body);
 $smarty->assign('dirs', $dirs);
-$smarty->assign('username', $_SESSION['github_username']);
+$smarty->assign('GITHUB_ENABLED', GitHubSettings::ENABLED);
+if(GitHubSettings::ENABLED) {
+	$smarty->assign('username', $_SESSION['github_username']);
+}
+else{
+	$smarty->assign('username', '');
+}
 $smarty->assign('page_writable', $page_writable);
 if(!$one_flag){
 	// $smarty->assign('breadcrumb_html', $breadcrumb_html);

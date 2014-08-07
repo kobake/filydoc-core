@@ -94,6 +94,7 @@
 						</ul>
 					-->
 
+					{if $GITHUB_ENABLED}
 					<ul class="nav navbar-nav pull-right">
 						{if $username == ''}
 							<li>
@@ -112,6 +113,7 @@
 							</li>
 						{/if}
 					</ul>
+					{/if}
 
 						<!--
 					<div class="navbar-right">

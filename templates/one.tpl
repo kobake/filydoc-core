@@ -23,11 +23,13 @@
 		<div id="page-content-wrapper"><div><div id="right-wrapper">
 			<section id="content-section">
 				<div ng-controller="RightController">
+					{if isAdminUser()}
 					<div class="page-control">
 						<a href="#" ng-click="editBegin();" id="page-edit">
 							<i class="glyphicon glyphicon-edit"></i>Edit
 						</a>
 					</div>
+					{/if}
 
 					<div id="error-message-writable" class="error-message">
 						Empty
