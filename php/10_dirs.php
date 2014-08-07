@@ -72,14 +72,26 @@ function saveCache($name, $variable)
 	@file_put_contents(TMP_ROOT. '/' . $name . '.serialized', $data);
 }
 
+// 指定のタイムスタンプより大きいタイムスタンプのファイルを探す
+function findNewerFile($dirPath, $timestamp){
+	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirPath));
+	foreach ($iterator as $item) {
+		//if ($item->isFile()) {
+		$t = $item->getMTime();
+		if($t > $timestamp)return $item;
+	}
+	return false;
+}
+
 // ディレクトリの更新日時（中のファイルのうち最も最新の更新日時）を取得
 function GetRecentlyModifiedTime($dirPath)
 {
-	$iterator = new DirectoryIterator($dirPath);
+	$iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dirPath));
 	$mtime = -1;
 	foreach ($iterator as $fileinfo) {
 		//if ($fileinfo->isFile()) {
 			$t = $fileinfo->getMTime();
+			// var_dump($fileinfo->getFilename());
 			if ($t > $mtime) {
 				// $file = $fileinfo->getFilename();
 				$mtime = $t;
@@ -107,14 +119,21 @@ function get_dirs()
 	global $g_webpath2item;
 	
 	// タイムスタンプ比較
-	$t_org = GetRecentlyModifiedTime(DATA_ROOT);           // オリジナルデータ
 	$t_cache = filemtime(TMP_ROOT . '/all.serialized'); // キャッシュデータ
 	$force_restruct = false;
 	if($t_cache === false){ // キャッシュが無い場合、強制再構築
 		$force_restruct = true;
 	}
-	else if($t_cache - 3 < $t_org){ // キャッシュがオリジナルより古い（小さい）場合、強制再構築。※キャッシュは少なくともオリジナルより3秒以上新しい必要がある。
-		$force_restruct = true;
+	else{
+		// キャッシュがオリジナルより古い（小さい）場合、強制再構築。※キャッシュは少なくともオリジナルより3秒以上新しい必要がある。
+		// $start = microtime(true);
+		$found = findNewerFile(DATA_ROOT, $t_cache - 4); // (キャッシュ更新日時-4秒)より新しい(タイムスタンプが大きい)ファイルを探す
+		// $end = microtime(true);
+		// $t = $end - $start;
+		if($found){
+			$force_restruct = true;
+		}
+		// var_dump($force_restruct);exit(0);
 	}
 	
 	// キャッシュロード
