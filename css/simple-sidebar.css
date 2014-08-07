@@ -203,6 +203,9 @@ div.page-control i {
   padding-top: 0px;
   padding-bottom: 0px;
 }
+#tree-box ul.treeview {
+  padding-bottom: 88px;
+}
 #tree-box li {
   vertical-align: middle;
   padding-top: 0px;
