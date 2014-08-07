@@ -91,7 +91,7 @@ else{
 require_once(APP_ROOT . '/php/00_log.php');
 require_once(APP_ROOT . '/php/10_dirs.php');
 require_once(APP_ROOT . '/php/20_resolve.php');
-require_once(APP_ROOT . '/php/30_load.php');
+require_once(APP_ROOT . '/php/30_load_save.php');
 require_once(APP_ROOT . '/php/40_title.php');
 require_once(APP_ROOT . '/php/50_meta.php');
 require_once(APP_ROOT . '/php/60_menu.php');
@@ -180,6 +180,7 @@ $dirs = get_dirs();
 // ディスパッチ処理
 // ※セキュリティ：リアルファイルにアクセスするため、ホスト内のpublic_html以外のファイルが参照されないように気を付けること
 parse_str($_SERVER['QUERY_STRING'], $query);
+$templateItem = null;
 if($search_flag){
 	// 検索結果をmarkdown形式で取得
 	$text = searchAndGenerateMarkdownText($query['q']);
@@ -191,6 +192,40 @@ else{
 	$templateItem = resolveTemplateItem();
 	// テキストロード
 	$text = loadText($templateItem);
+}
+
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// PUTを受け取る場合
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+if($templateItem && $one_flag == 'md' && $_SERVER['REQUEST_METHOD'] == 'PUT') {
+	header('Content-type: application/json; charset=UTF-8');
+	// print(var_export($_SERVER, true) . "\n");
+	// print(var_export($_POST, true) . "\n");
+
+	// putデータ受け取り
+	$input = file_get_contents("php://input");
+
+	// json parse
+	$data = json_decode($input, true);
+
+	// 保存
+	try{
+		saveText($templateItem, $data['markdown']);
+		$result = array(
+			'result' => 'SUCCESS'
+		);
+	}
+	catch(Exception $ex){
+		$result = array(
+			'result' => 'FAILURE',
+			'error' => $ex->getMessage()
+		);
+	}
+
+	// 結果
+	echo json_encode($result);
+	exit(0);
 }
 
 

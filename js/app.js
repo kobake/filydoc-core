@@ -215,6 +215,34 @@ function RightController($scope, $location, $compile, $http){
 	// 編集確定
 	$scope.editSave = function(){
 		console.log("editSave.");
+		// エラーメッセージは一度隠す
+		$('#error-message').hide();
+
+		// AJAXでPUT送る
+		var ajaxpath = getWebPathForAjax($location, 'md');
+		var data = {
+			markdown: $('#edit-textarea').val()
+		};
+		console.log("Put content to " + ajaxpath);
+		$http.put(ajaxpath, data)
+			.error(function (data, status, headers, config) {
+				$('#error-message').text("ajax put error");
+				$('#error-message').show();
+			})
+			.success(function (data, status, headers, config) {
+				if(data.result === 'SUCCESS'){
+					$('#error-message').text("OK");
+					$('#error-message').show();
+				}
+				else{
+					$('#error-message').text("Error: " + data.error);
+					$('#error-message').show();
+				}
+				console.log(data);
+				console.log(status);
+				console.log(headers());
+				//$('#edit-textarea').val(data);
+			});
 	};
 
 	// 編集キャンセル

@@ -28,6 +28,9 @@
 							<i class="glyphicon glyphicon-edit"></i>Edit
 						</a>
 					</div>
+					<div id="error-message">
+						Error message
+					</div>
 					<div class="content-header">
 						<h1>
 							{$metas['h1title']}

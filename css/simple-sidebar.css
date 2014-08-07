@@ -135,6 +135,19 @@ div.page-control {
 div.page-control i {
   margin-right: 2px;
 }
+#error-message {
+  margin-top: 8px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border: 1px solid #f88;
+  background-color: #fdd;
+  border-radius: 4px;
+  padding: 4px 16px;
+  font-size: 11pt;
+  color: #844;
+  overflow: hidden;
+  display: none;
+}
 .breadcrumb {
   background-color: inherit;
   white-space: nowrap;
