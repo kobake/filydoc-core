@@ -231,8 +231,10 @@ function RightController($scope, $location, $compile, $http){
 			})
 			.success(function (data, status, headers, config) {
 				if(data.result === 'SUCCESS'){
-					$('#error-message').text("OK");
-					$('#error-message').show();
+					// リロード
+					$scope.loadContent();
+					// $('#error-message').text("OK");
+					// $('#error-message').show();
 				}
 				else{
 					$('#error-message').text("Error: " + data.error);
@@ -285,166 +287,171 @@ app.controller('PageController', function ($scope, $http, $location, $compile, $
 	console.log("$location.path() = " + $location.path());
 	*/
 	// ここで非同期通信
-	var ajaxpath = getWebPathForAjax($location, 'html');
-	console.log("Get content from " + ajaxpath);
-	$http.get(ajaxpath)
-		.error(function (data, status, headers, config) {
-			// コンテンツ更新
-			$('#content-section').html("<div style='margin:20px;'>Content not found</div>");
-			// タイトル更新
-			$('head title').text('not found - ' + window.g_sitename);
-		})
-		.success(function (data, status, headers, config) {
-			// コンテンツ更新
-			//$('#content-section').replaceWith($(data).find('#content-section'));
-			var html = $(data).find('#content-section').html();
-			$('#content-section').html($compile(html)($scope));
+	$scope.loadContent = function(){
+		var ajaxpath = getWebPathForAjax($location, 'html');
+		console.log("Get content from " + ajaxpath);
+		$http.get(ajaxpath)
+			.error(function (data, status, headers, config) {
+				// コンテンツ更新
+				$('#content-section').html("<div style='margin:20px;'>Content not found</div>");
+				// タイトル更新
+				$('head title').text('not found - ' + window.g_sitename);
+			})
+			.success(function (data, status, headers, config) {
+				// コンテンツ更新
+				//$('#content-section').replaceWith($(data).find('#content-section'));
+				var html = $(data).find('#content-section').html();
+				$('#content-section').html($compile(html)($scope));
 
-			// 目次
-			generateToc($compile, $scope);
+				// 目次
+				generateToc($compile, $scope);
 
-			// analytics
-			if($window['ga']){
-				console.log("new analytics");
-				$window.ga('send', 'pageview', { page: $location.path() }); //new
-			}
-			if($window['_gaq']) {
-				console.log("old analytics");
-				$window._gaq.push(['_trackPageview', $location.path()]); //old
-			}
+				// analytics
+				if($window['ga']){
+					console.log("new analytics");
+					$window.ga('send', 'pageview', { page: $location.path() }); //new
+				}
+				if($window['_gaq']) {
+					console.log("old analytics");
+					$window._gaq.push(['_trackPageview', $location.path()]); //old
+				}
 
-			// -- ソーシャル -- //
-			if(true){
-				// pocket
-				jQuery('#pocket-btn-js').remove();
-				!function(d,i){
-					if(!d.getElementById(i)){
-						var j = d.createElement("script");
-						j.id = i;
-						j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
-						var w = d.getElementById(i);
-						d.body.appendChild(j);
-					}
-				}(document,"pocket-btn-js");
-				// twitter
-				jQuery('#twitter-wjs').remove();
-				!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-				// hatena
-				jQuery('#hatena-btn-js').remove();
-				!function(d,i){
-					if(!d.getElementById(i)){
-						var j = d.createElement("script");
-						j.id = i;
-						j.src = "http://b.st-hatena.com/js/bookmark_button.js";
-						j.charset = 'utf-8';
-						j.defer = true;
-						j.async = true;
-						var w = d.getElementById(i);
-						d.body.appendChild(j);
-					}
-				}(document,"hatena-btn-js");
-				// google plus
-				jQuery('#google-btn-js').remove();
-				window.___gcfg = {lang: 'ja'};
-				(function() {
-					var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-					po.id = 'google-btn-js';
-					po.src = 'https://apis.google.com/js/platform.js';
-					var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-				})();
-				// facebook
-				FB = null;
-				jQuery('#fb-root').html("");
-				jQuery('#facebook-jssdk').remove();
-				(function(d, s, id) {
-					var js, fjs = d.getElementsByTagName(s)[0];
-					if (d.getElementById(id)) return;
-					js = d.createElement(s); js.id = id;
-					js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.0";
-					js.defer = true;
-					js.async = true;
-					fjs.parentNode.insertBefore(js, fjs);
-					document.body.appendChild(js);
-				}(document, 'script', 'facebook-jssdk'));
-				// tumblr
-				jQuery('#tumblr-btn-js').remove();
-				!function(d,i){
-					if(!d.getElementById(i)){
-						var j = d.createElement("script");
-						j.id = i;
-						j.src = "http://platform.tumblr.com/v1/share.js";
-						j.charset = 'utf-8';
-						j.defer = true;
-						j.async = true;
-						var w = d.getElementById(i);
-						d.body.appendChild(j);
-					}
-				}(document,"tumblr-btn-js");
-			}
+				// -- ソーシャル -- //
+				if(true){
+					// pocket
+					jQuery('#pocket-btn-js').remove();
+					!function(d,i){
+						if(!d.getElementById(i)){
+							var j = d.createElement("script");
+							j.id = i;
+							j.src = "https://widgets.getpocket.com/v1/j/btn.js?v=1";
+							var w = d.getElementById(i);
+							d.body.appendChild(j);
+						}
+					}(document,"pocket-btn-js");
+					// twitter
+					jQuery('#twitter-wjs').remove();
+					!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+					// hatena
+					jQuery('#hatena-btn-js').remove();
+					!function(d,i){
+						if(!d.getElementById(i)){
+							var j = d.createElement("script");
+							j.id = i;
+							j.src = "http://b.st-hatena.com/js/bookmark_button.js";
+							j.charset = 'utf-8';
+							j.defer = true;
+							j.async = true;
+							var w = d.getElementById(i);
+							d.body.appendChild(j);
+						}
+					}(document,"hatena-btn-js");
+					// google plus
+					jQuery('#google-btn-js').remove();
+					window.___gcfg = {lang: 'ja'};
+					(function() {
+						var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+						po.id = 'google-btn-js';
+						po.src = 'https://apis.google.com/js/platform.js';
+						var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+					})();
+					// facebook
+					FB = null;
+					jQuery('#fb-root').html("");
+					jQuery('#facebook-jssdk').remove();
+					(function(d, s, id) {
+						var js, fjs = d.getElementsByTagName(s)[0];
+						if (d.getElementById(id)) return;
+						js = d.createElement(s); js.id = id;
+						js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.0";
+						js.defer = true;
+						js.async = true;
+						fjs.parentNode.insertBefore(js, fjs);
+						document.body.appendChild(js);
+					}(document, 'script', 'facebook-jssdk'));
+					// tumblr
+					jQuery('#tumblr-btn-js').remove();
+					!function(d,i){
+						if(!d.getElementById(i)){
+							var j = d.createElement("script");
+							j.id = i;
+							j.src = "http://platform.tumblr.com/v1/share.js";
+							j.charset = 'utf-8';
+							j.defer = true;
+							j.async = true;
+							var w = d.getElementById(i);
+							d.body.appendChild(j);
+						}
+					}(document,"tumblr-btn-js");
+				}
 
-			// フッタ
-			window.footerFixed();
+				// フッタ
+				window.footerFixed();
 
-			// ハッシュ
-			var h = $location.hash();
-			console.log("HASH = " + h);
-			h = generateAnchor(h);
-			console.log("HASH2 = " + h);
+				// ハッシュ
+				var h = $location.hash();
+				console.log("HASH = " + h);
+				h = generateAnchor(h);
+				console.log("HASH2 = " + h);
 
-			// ハッシュに一致する h2 にスタイルを追加
-			$('.page-content h2').removeClass('h2-active');
-			$('.page-content h2 span[id="' + h + '"]').parent().addClass('h2-active');
-			if($('#' + h).size() >= 1) {
-				$(document.body).scrollTop($('#' + h).offset().top);
-			}
-			else{
-				$(document.body).scrollTop(0);
-			}
+				// ハッシュに一致する h2 にスタイルを追加
+				$('.page-content h2').removeClass('h2-active');
+				$('.page-content h2 span[id="' + h + '"]').parent().addClass('h2-active');
+				if($('#' + h).size() >= 1) {
+					$(document.body).scrollTop($('#' + h).offset().top);
+				}
+				else{
+					$(document.body).scrollTop(0);
+				}
 
-			// 外部サイトへのリンクターゲットを_blankに変更
-			$("#content-section a[href^='http']")
-				.not("[href*='" + location.host + "']")
-				.attr('target', '_blank');
+				// 外部サイトへのリンクターゲットを_blankに変更
+				$("#content-section a[href^='http']")
+					.not("[href*='" + location.host + "']")
+					.attr('target', '_blank');
 
-			// タイトル更新
-			var title = window.g_sitename;
-			if(!title){
-				title = 'Filydoc';
-			}
-			var m = data.match(/<title>(.*)<\/title>/);
-			if (m) {
-				title = m[1];
-			}
-			$('head title').text(title);
-			// ツリーアイテムアクティブ化
-			$('#tree-box li a').removeClass('active');
-			$('#tree-box li').removeClass('active');
-			$('#tree-box > div > a[href="/"]').removeClass('active');
-			var a = $('#tree-box li a[href="' + $location.path() + '"]');
-			if (a.size() == 0) {
-				$('#tree-box > div > a[href="/"]').addClass('active');
-				var div = $('#sidebar-wrapper-out');
-				div.scrollTop(0);
-			}
-			else {
-				a.addClass('active'); // a.active
-				a.parent().addClass('active'); // li.active
-				// 親のツリー開く
-				var this_li = a.parent();
-				var top_li = expandLiParents(this_li);
+				// タイトル更新
+				var title = window.g_sitename;
+				if(!title){
+					title = 'Filydoc';
+				}
+				var m = data.match(/<title>(.*)<\/title>/);
+				if (m) {
+					title = m[1];
+				}
+				$('head title').text(title);
+				// ツリーアイテムアクティブ化
+				$('#tree-box li a').removeClass('active');
+				$('#tree-box li').removeClass('active');
+				$('#tree-box > div > a[href="/"]').removeClass('active');
+				var a = $('#tree-box li a[href="' + $location.path() + '"]');
+				if (a.size() == 0) {
+					$('#tree-box > div > a[href="/"]').addClass('active');
+					var div = $('#sidebar-wrapper-out');
+					div.scrollTop(0);
+				}
+				else {
+					a.addClass('active'); // a.active
+					a.parent().addClass('active'); // li.active
+					// 親のツリー開く
+					var this_li = a.parent();
+					var top_li = expandLiParents(this_li);
 
-				// 自分のツリー開く
-				expandLi(this_li);
-				
-				// スクロール
-				console.log("====SCROLL====");
-				console.log(this_li);
-				console.log(top_li);
-				treeScroll(this_li, top_li);
-			}
-			window.already_scrolled = true;
-		});
+					// 自分のツリー開く
+					expandLi(this_li);
+
+					// スクロール
+					console.log("====SCROLL====");
+					console.log(this_li);
+					console.log(top_li);
+					treeScroll(this_li, top_li);
+				}
+				window.already_scrolled = true;
+			});
+	};
+	$scope.loadContent();
 });
+
+
 
 // ★ルーティング設定
 app.config(['$routeProvider', function ($routeProvider) {
