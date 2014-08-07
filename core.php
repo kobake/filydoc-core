@@ -140,7 +140,8 @@ if($uri_without_query == getWebRootDir() . '/login.html' || $uri_without_query =
 	$login_flag = true;
 	// GitHubログイン機能が無効な場合はログインページ自体を表示しない
 	if(!GitHubSettings::ENABLED){
-		header('location: /');
+		$url = getWebRootDir();
+		header("Location: $url");
 		exit(0);
 	}
 }
@@ -151,7 +152,8 @@ if($uri_without_query == getWebRootDir() . '/logout') {
 	$_SESSION = array();
 	session_destroy();
 	// リダイレクト
-	header("Location: /");
+	$url = getWebRootDir();
+	header("Location: $url");
 	exit(0);
 }
 
@@ -167,7 +169,8 @@ if(GitHubSettings::ENABLED) {
 		$username = $github->signup();
 		// ユーザ名が取得できたら、セッションに保存してリダイレクト
 		$_SESSION['github_username'] = $username;
-		header("Location: /");
+		$url = getWebRootDir();
+		header("Location: $url");
 		exit(0);
 	}
 	if (!isset($_SESSION['github_username'])) {
@@ -329,10 +332,33 @@ if(!$search_flag){
 
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// Smarty準備
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// Smarty処理
+$smarty = MySmarty::getInstance();
+$smarty->php_handling = Smarty::PHP_ALLOW;
+$smarty->template_dir = APP_ROOT . '/.';
+$smarty->compile_dir = TMP_ROOT . '/smarty/templates_c/';
+$smarty->config_dir = TMP_ROOT . '/smarty/config/';
+$smarty->cache_dir = TMP_ROOT . '/smarty/cache/';
+$smarty->assign('metas', $metas);
+$smarty->assign('dirs', $dirs);
+$smarty->assign('GITHUB_ENABLED', GitHubSettings::ENABLED);
+if(GitHubSettings::ENABLED) {
+	$smarty->assign('username', $_SESSION['github_username']);
+}
+else{
+	$smarty->assign('username', '');
+}
+$smarty->assign('page_writable', $page_writable);
+
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // 特殊ページ処理
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 if($login_flag){
-	$body = file_get_contents(APP_ROOT . '/templates/login.tpl');
+	//$body = file_get_contents(APP_ROOT . '/templates/login.tpl');
+	$body = $smarty->fetch(APP_ROOT . '/templates/login.tpl');
 }
 
 
@@ -346,27 +372,11 @@ if(!$one_flag){
 	$items_html = get_items_html($dirs);
 }
 
+
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // 全体構築
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
-// Smarty処理
-$smarty = MySmarty::getInstance();
-$smarty->php_handling = Smarty::PHP_ALLOW;
-$smarty->template_dir = APP_ROOT . '/.';
-$smarty->compile_dir = TMP_ROOT . '/smarty/templates_c/';
-$smarty->config_dir = TMP_ROOT . '/smarty/config/';
-$smarty->cache_dir = TMP_ROOT . '/smarty/cache/';
-$smarty->assign('metas', $metas);
 $smarty->assign('body', $body);
-$smarty->assign('dirs', $dirs);
-$smarty->assign('GITHUB_ENABLED', GitHubSettings::ENABLED);
-if(GitHubSettings::ENABLED) {
-	$smarty->assign('username', $_SESSION['github_username']);
-}
-else{
-	$smarty->assign('username', '');
-}
-$smarty->assign('page_writable', $page_writable);
 if(!$one_flag){
 	// $smarty->assign('breadcrumb_html', $breadcrumb_html);
 	$smarty->assign('items_html', $items_html);

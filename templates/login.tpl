@@ -9,7 +9,7 @@
 		data-event_name="Login"
 		data-login__type="GitHub"
 		data-place="login page"
-		href="/login_github"
+		href="{getWebRootDir()}/login_github"
 	    target="_self"
 		>
 		<i class="fa fa-github"></i>

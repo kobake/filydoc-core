@@ -98,7 +98,7 @@
 					<ul class="nav navbar-nav pull-right">
 						{if $username == ''}
 							<li>
-								<a href="/login" >Log in</a>
+								<a href="{getWebRootDir()}/login">Log in</a>
 							</li>
 						{else}
 							<li>
@@ -107,7 +107,7 @@
 								</a>
 								<div class="dropdown-menu" style="min-width: 90px;">
 									<div class="col-sm-12">
-										<a href="/logout" target="_self">Log out</a>
+										<a href="{getWebRootDir()}/logout" target="_self">Log out</a>
 									</div>
 								</div>
 							</li>
