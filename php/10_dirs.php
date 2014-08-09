@@ -1,6 +1,6 @@
 <?php
 
-define('CACHE_VERSION', 'cache1.08');
+define('CACHE_VERSION', 'cache1.09');
 // echo "ほげ"
 // @param String $real_path
 // @param String $web_path
@@ -339,7 +339,7 @@ function _get_dirs($real_path, $web_path)
 		$item = [];
 		$item['key'] = $name; // 10_fuga_ふが … ソートに使う
 		$item['name'] = $name; // fuga
-		$item['realpath'] = $real_path . '/' . $name; // /home/sites/clock-up.jp/hogehoge/10_fuga_ふが.md
+		$item['realpath'] = $real_path . '/' . $name; // /home/sites/clock-up.jp/Hogehoge/10_fuga_ふが.md
 		$item['webpath']  = $web_path  . '/' . $name; // /hogehoge/fuga
 
 		// ちょっとした加工
@@ -347,6 +347,7 @@ function _get_dirs($real_path, $web_path)
 		$item['name'] = preg_replace('/^[A-Za-z][A-Za-z0-9\-\.]*\_/', '', $item['name']); // 先頭キーワードを除去 (da.ta-base_)
 		$item['webpath']  = preg_replace('/\/[0-9]+\_/', '/', $item['webpath']); // webpathのほうでも先頭数字は除去 (01_)
 		$item['webpath']  = preg_replace('/\_[^\_\/]+$/', '', $item['webpath']); // webpathのほうでは後ろのキーワードを除去 (_データベース)
+		$item['webpath']  = strtolower($item['webpath']);                        // webpathはすべて小文字にする
 
 		// タイプ判別・子取得
 		if(is_dir($item['realpath'])){ // ディレクトリ
