@@ -330,68 +330,89 @@ if(!$search_flag){
 	// URL文字列の途中にアンダースコアが含まれている場合は \ でエスケープする必要がある（気持ち悪い…）(Markdownの場合) (現在はMarkdown Extraなのでエスケープ処理不要)
 	// 例：[http://www.iconj.com/iphone\_style\_icon\_generator.php](http://www.iconj.com/iphone_style_icon_generator.php)
 
-	// 実験：はてな風自動リンク (title取得)
-	//
-	// http://hogehoge/:title みたいな表記があった場合、インターネット上から自動的にタイトルを取得して
-	// <a href="http://hogehoge/">たいとる</a> のようなリンクに変換する
-	// タイトルは tmp/sites.db にキャッシュされ、次回からはキャッシュを優先する
-	$body = preg_replace_callback('/([^\"])(https?\:\/\/[\w\/\:\;%#\$&\?\(\)~\.=\+\-]+)\:title/', function($m){
-		// matched
-		$left = $m[1];
-		$url = $m[2];
+	if(AutoLinkSettings::ENABLED){
+		// 実験：はてな風自動リンク (title取得)
+		//
+		// http://hogehoge/:title みたいな表記があった場合、インターネット上から自動的にタイトルを取得して
+		// <a href="http://hogehoge/">たいとる</a> のようなリンクに変換する
+		// タイトルは tmp/sites.db にキャッシュされ、次回からはキャッシュを優先する
+		$body = preg_replace_callback('/([^\"])(https?\:\/\/[\w\/\:\;%#\$&\?\(\)~\.=\+\-]+)/', function($m){
+			// matched
+			$left = $m[1];
+			$url = $m[2];
 
-		// DB接続、TABLE作成
-		global $g_db;
-		if(!isset($g_db)){
-			$g_db = new PDO("sqlite:" . TMP_ROOT . '/sites.db', "", "");
-			if($g_db){
-				$ret = $g_db->exec(
-					'CREATE TABLE sites(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255), title VARCHAR(255))'
-				);
-				// echo "$ret\n";
-
-				$ret = $g_db->exec(
-					'CREATE UNIQUE INDEX url ON sites(url)'
-				);
-				// echo "$ret\n";
+			// flag
+			$flag = ''; // ':title' or ':notitle' or ''
+			if(preg_match('/\:(title|notitle)$/', $url, $m)){
+				$flag = ':' . $m[1];
+				$url = preg_replace('/\:(title|notitle)$/', '', $url);
 			}
-		}
 
-		// DB接続に失敗している場合は負荷が気になるので名前取得処理自体をやめる
-		if(!$g_db){
-			return "{$left}<a href=\"{$url}\">{$url}</a>"; // URLのままで表示
-		}
+			// :notitle指定なら取得しない
+			if($flag == ':notitle'){
+				return "{$left}<a href=\"{$url}\">{$url}</a>"; // URLのままで表示
+			}
 
-		// DBから取得
-		$stmt = $g_db->prepare('SELECT id, url, title FROM sites WHERE url = ?');
-		$stmt->execute(array($url));
-		$record = $stmt->fetch(PDO::FETCH_ASSOC);
-		if($record){
-			$title = $record['title'];
+			// flag指定が無い場合はAutoLinkSettings::AUTO_TITLEに従う
+			if($flag == ''){
+				if(!AutoLinkSettings::AUTO_TITLE){
+					return "{$left}<a href=\"{$url}\">{$url}</a>"; // URLのままで表示
+				}
+			}
+
+			// DB接続、TABLE作成
+			global $g_db;
+			if(!isset($g_db)){
+				$g_db = new PDO("sqlite:" . TMP_ROOT . '/sites.db', "", "");
+				if($g_db){
+					$ret = $g_db->exec(
+						'CREATE TABLE sites(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255), title VARCHAR(255))'
+					);
+					// echo "$ret\n";
+
+					$ret = $g_db->exec(
+						'CREATE UNIQUE INDEX url ON sites(url)'
+					);
+					// echo "$ret\n";
+				}
+			}
+
+			// DB接続に失敗している場合は負荷が気になるので名前取得処理自体をやめる
+			if(!$g_db){
+				return "{$left}<a href=\"{$url}\">{$url}</a>"; // URLのままで表示
+			}
+
+			// DBから取得
+			$stmt = $g_db->prepare('SELECT id, url, title FROM sites WHERE url = ?');
+			$stmt->execute(array($url));
+			$record = $stmt->fetch(PDO::FETCH_ASSOC);
+			if($record){
+				$title = $record['title'];
+				return "{$left}<a href=\"{$url}\">{$title}</a>";
+			}
+
+			// インターネットから取得
+			$title = $url;
+			$body = @file_get_contents($url);
+			if($body !== false){
+				$body = mb_convert_encoding($body, 'utf-8', 'auto');
+				if(preg_match('/<title>([^<]*)<\/title>/si', $body, $m)) {
+					$title = $m[1];
+					$title = trim($title);
+				}
+			}
+
+			// DBに保存
+			$stmt = $g_db->prepare('INSERT INTO sites(url, title) VALUES(?, ?)');
+			$stmt->execute(array($url, $title));
+
+			// 結果
 			return "{$left}<a href=\"{$url}\">{$title}</a>";
-		}
-
-		// インターネットから取得
-		$title = $url;
-		$body = @file_get_contents($url);
-		if($body !== false){
-			$body = mb_convert_encoding($body, 'utf-8', 'auto');
-			if(preg_match('/<title>([^<]*)<\/title>/si', $body, $m)) {
-				$title = $m[1];
-				$title = trim($title);
-			}
-		}
-
-		// DBに保存
-		$stmt = $g_db->prepare('INSERT INTO sites(url, title) VALUES(?, ?)');
-		$stmt->execute(array($url, $title));
-
-		// 結果
-		return "{$left}<a href=\"{$url}\">{$title}</a>";
-	}, $body);
+		}, $body);
+	}
 
 	// 自動リンク
-	$body = preg_replace('/([^\"])(https?\:\/\/[\w\/\:\;%#\$&\?\(\)~\.=\+\-]+)/', '\1<a href="\2">\2</a>', $body);
+	// $body = preg_replace('/([^\"])(https?\:\/\/[\w\/\:\;%#\$&\?\(\)~\.=\+\-]+)/', '\1<a href="\2">\2</a>', $body);
 }
 
 

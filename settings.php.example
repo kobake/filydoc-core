@@ -17,3 +17,12 @@ class GitHubSettings{
 	//   Ex) "kobake,john,koji"
 	const ACCOUNTS_ADMIN = "kobake";
 }
+
+// Auto link settings
+class AutoLinkSettings{
+	// Whether to enable auto link or not.
+	const ENABLED = true;
+
+	// Whether to get a link's title from internet automatically and show it.
+	const AUTO_TITLE = true;
+}
