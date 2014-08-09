@@ -337,7 +337,7 @@ function _get_dirs($real_path, $web_path)
 
 		// 詳細情報
 		$item = [];
-		$item['key'] = $name; // 10_fuga_ふが … ソートに使う
+		$item['key'] = strtolower($name); // 10_fuga_ふが … ソートに使う
 		$item['name'] = $name; // fuga
 		$item['realpath'] = $real_path . '/' . $name; // /home/sites/clock-up.jp/Hogehoge/10_fuga_ふが.md
 		$item['webpath']  = $web_path  . '/' . $name; // /hogehoge/fuga
