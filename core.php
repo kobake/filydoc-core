@@ -348,12 +348,12 @@ if(!$search_flag){
 				$ret = $g_db->exec(
 					'CREATE TABLE sites(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255), title VARCHAR(255))'
 				);
-				echo "$ret\n";
+				// echo "$ret\n";
 
 				$ret = $g_db->exec(
 					'CREATE UNIQUE INDEX url ON sites(url)'
 				);
-				echo "$ret\n";
+				// echo "$ret\n";
 			}
 		}
 
