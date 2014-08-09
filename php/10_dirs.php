@@ -344,7 +344,7 @@ function _get_dirs($real_path, $web_path)
 
 		// ちょっとした加工
 		$item['name'] = preg_replace('/^[0-9]+\_/', '', $item['name']); // 先頭数字を除去 (01_)
-		$item['name'] = preg_replace('/^[A-Za-z][A-Za-z0-9]*\_/', '', $item['name']); // 先頭キーワードを除去 (database_)
+		$item['name'] = preg_replace('/^[A-Za-z][A-Za-z0-9\-]*\_/', '', $item['name']); // 先頭キーワードを除去 (data-base_)
 		$item['webpath']  = preg_replace('/\/[0-9]+\_/', '/', $item['webpath']); // webpathのほうでも先頭数字は除去 (01_)
 		$item['webpath']  = preg_replace('/\_[^\_\/]+$/', '', $item['webpath']); // webpathのほうでは後ろのキーワードを除去 (_データベース)
 
