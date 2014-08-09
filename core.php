@@ -135,6 +135,16 @@ if($uri_without_query == getWebRootDir() . '/search.html' || $uri_without_query 
 	$search_flag = true;
 }
 
+// 検索でない場合、大文字URLを小文字に補正
+if(!$search_flag){
+	if(preg_match('/[A-Z]/', $_SERVER['REQUEST_URI'])){
+		$url = strtolower($_SERVER['REQUEST_URI']);
+		header("HTTP/1.1 301 Moved Permanently");
+		header("Location: $url");
+		exit(0);
+	}
+}
+
 // ログインページかどうかを判定
 $login_flag = false;
 if($uri_without_query == getWebRootDir() . '/login.html' || $uri_without_query == getWebRootDir() . '/login'){
