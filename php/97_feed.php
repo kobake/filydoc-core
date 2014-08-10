@@ -67,7 +67,7 @@ function generateFeed(){
 		// channel items/entries
 		$fitem = new FeedItem();
 		$fitem->title       = $item['webpath'];
-		$fitem->link        = FeedSettings::SITE_URL . $item['webpath'];
+		$fitem->link        = FeedSettings::SITE_URL . implode('/', array_map('rawurlencode', explode('/', $item['webpath'])));;
 		$fitem->description = $item['name'];
 		// $fitem->source      = "http://mydomain.net";
 		$fitem->author      = FeedSettings::AUTHOR_MAIL;
