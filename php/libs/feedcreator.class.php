@@ -47,7 +47,7 @@ Please refer to to /example directory
 **************************************************************************/
 
 // your local timezone, set to "" to disable or for GMT
-define("TIME_ZONE","");
+// define("TIME_ZONE",""); // 2014.08.10 kobake comment out
 
 
 
@@ -818,7 +818,7 @@ class FeedDate {
 	 * @return a date in ISO 8601 (RFC 3339) format
 	 */
 	function iso8601() {
-		$date = gmdate("Y-m-d\TH:i:sO",$this->unix);
+		$date = date("Y-m-d\TH:i:sO", $this->unix); // 2014.08.10 kobake
 		$date = substr($date,0,22) . ':' . substr($date,-2);
 		if (TIME_ZONE!="") $date = str_replace("+00:00",TIME_ZONE,$date);
 		return $date;
@@ -1205,7 +1205,7 @@ class PIECreator01 extends FeedCreator {
 		$feed.= "    <subtitle>".htmlspecialchars($this->description)."</subtitle>\n";
 		$feed.= "    <link rel=\"alternate\" type=\"text/html\" href=\"".htmlspecialchars($this->link)."\"/>\n";
 		$feed.= "    <id>".htmlspecialchars($this->link)."</id>\n";
-		$now = new FeedDate();
+		$now = new FeedDate($this->date); // 2014.04.10 kobake FeedDate by unixtime
 		$feed.= "    <updated>".htmlspecialchars($now->iso8601())."</updated>\n";
 		if ($this->editor!="") {
 			$feed.= "    <author>\n";
@@ -1236,7 +1236,7 @@ class PIECreator01 extends FeedCreator {
 				$this->items[$i]->date = time();
 			}
 			$itemDate = new FeedDate($this->items[$i]->date);
-			$feed.= "        <published>".htmlspecialchars($itemDate->iso8601())."</published>\n";
+			// $feed.= "        <published>".htmlspecialchars($itemDate->iso8601())."</published>\n"; // 2014.08.10 kobake comment out
 			$feed.= "        <updated>".htmlspecialchars($itemDate->iso8601())."</updated>\n";
 
 
@@ -1295,7 +1295,7 @@ class PIECreator01 extends FeedCreator {
 				$feed.= "        <summary". $temptype . ">". $tempdesc ."</summary>\n";
 			} else {
 
-				$feed.= "	 <summary>no summary</summary>\n";
+				$feed.= "        <summary>no summary</summary>\n"; // 2014.08.10 kobake changed space length
 
 			}
 
