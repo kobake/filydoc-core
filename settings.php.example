@@ -26,3 +26,11 @@ class AutoLinkSettings{
 	// Whether to get a link's title from internet automatically and show it.
 	const AUTO_TITLE = true;
 }
+
+// Feed settings
+class FeedSettings{
+	const SITE_TITLE       = 'clock-up-memo';
+	const SITE_DESCRIPTION = 'description';
+	const SITE_URL         = 'http://memo.clock-up.jp';
+	const AUTHOR_MAIL      = 'kobake@users.sourceforge.net';
+}
