@@ -8,6 +8,10 @@ Core module for [filydoc](https://github.com/kobake/filydoc).
     $ npm install
     $ grunt
 
+Generate feed.xml
+-----------------
+    $ php core.php feed
+
 License
 -------
     The MIT License (MIT)
