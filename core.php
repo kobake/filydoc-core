@@ -10,8 +10,6 @@ define('APP_ROOT', dirname(__FILE__));
 define('DATA_ROOT', realpath(dirname(__FILE__) . '/../data'));
 define('TMP_ROOT', realpath(dirname(__FILE__) . '/../tmp'));
 
-// セッション開始
-session_start();
 
 function setDefaultTimezone($timezone) {
     if (!ini_get('date.timezone')) {
@@ -102,6 +100,7 @@ require_once(APP_ROOT . '/php/95_social.php');
 if(GitHubSettings::ENABLED){
 	require_once(APP_ROOT . '/php/96_github.php');
 }
+require_once(APP_ROOT . '/php/97_feed.php');
 
 // Markdown Extra
 require_once(APP_ROOT . '/php/libs/markdown.php');
@@ -116,6 +115,31 @@ function frameContent()
 	//	$smarty->display(preg_replace('/\\.php$/', '.tpl', $_SERVER['SCRIPT_FILENAME']));
 	$smarty->display($template);
 }
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// コマンドラインからの起動 (実験中)
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// Usage:
+//   php core.php feed       : Generate feed.xml
+if(php_sapi_name() == 'cli') {
+	if(in_array('feed', $argv)){
+		print("Feed generating...\n");
+		saveFeed();
+		print("Feed generated.\n");
+		exit(0);
+	}
+	else{
+		print("\n");
+	}
+	exit(0);
+}
+
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// HTTPリクエスト解釈
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// セッション開始
+session_start();
 
 // 単一ページ表示かどうかを判定 (.html)
 // REQUEST_URI  … /memo/search.html?q=hoge
