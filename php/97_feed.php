@@ -130,5 +130,13 @@ EOS;
 	$body .= "</urlset>\n";
 
 	// 保存
-	return file_put_contents('./sitemap.xml', $body);
+	file_put_contents('./sitemap.xml', $body);
+
+	// robots.txt保存
+	$url = FeedSettings::SITE_URL . '/sitemap.xml';
+	$robots = <<<EOS
+Sitemap: $url
+
+EOS;
+	file_put_contents('./robots.txt', $robots);
 }
