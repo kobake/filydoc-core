@@ -1,6 +1,6 @@
 <?php
 
-define('CACHE_VERSION', 'cache1.09');
+define('CACHE_VERSION', 'cache1.10');
 // echo "ほげ"
 // @param String $real_path
 // @param String $web_path
@@ -341,6 +341,7 @@ function _get_dirs($real_path, $web_path)
 		$item['name'] = $name; // fuga
 		$item['realpath'] = $real_path . '/' . $name; // /home/sites/clock-up.jp/Hogehoge/10_fuga_ふが.md
 		$item['webpath']  = $web_path  . '/' . $name; // /hogehoge/fuga
+		$item['updated']  = filemtime($item['realpath']);
 
 		// ちょっとした加工
 		$item['name'] = preg_replace('/^[0-9]+\_/', '', $item['name']); // 先頭数字を除去 (01_)
