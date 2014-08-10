@@ -127,11 +127,20 @@ function frameContent()
 if(php_sapi_name() == 'cli') {
 	if(in_array('feed', $argv)){
 		print("Feed generating...\n");
-		saveFeed();
+		generateFeed();
 		print("Feed generated.\n");
 		exit(0);
 	}
+	else if(in_array('sitemap', $argv)){
+		print("Sitemap generating...\n");
+		generateSitemap();
+		print("Sitemap generated.\n");
+		exit(0);
+	}
 	else{
+		print("Usage: \n");
+		print("  php core.php feed       : Generate feed.xml\n");
+		print("  php core.php sitemap    : Generate sitemap.xml\n");
 		print("\n");
 	}
 	exit(0);

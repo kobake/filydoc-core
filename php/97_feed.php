@@ -39,7 +39,7 @@ function _dirs2items($items, &$out_items)
 }
 
 // 処理開始
-function saveFeed(){
+function generateFeed(){
 	// get items
 	$dirs = get_dirs();
 	$items = dirs2items($dirs);
@@ -88,4 +88,47 @@ function saveFeed(){
 
 	// $rss->outputFeed("ATOM1.0");
 	$rss->saveFeed("ATOM1.0", "./feed.xml", false);
+}
+
+
+// 処理開始
+function generateSitemap(){
+	// get items
+	$dirs = get_dirs();
+	$items = dirs2items($dirs);
+
+	// webpath昇順でソート
+	usort($items, function($a, $b){
+		return strcmp($a['webpath'], $b['webpath']);
+	});
+	// $items = array_slice($items, 0, 50); // 最新50件
+
+	// var_dump($items);
+	// exit(0);
+
+	$body = '';
+	$body .= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+	$body .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+
+	// feed items
+	foreach($items as $item){
+		// 属性
+		$url = FeedSettings::SITE_URL . implode('/', array_map('rawurlencode', explode('/', $item['webpath'])));
+		$updated = date("Y-m-d\TH:i:sO", $item['updated']);
+		$updated = substr($updated, 0, 22) . ':' . substr($updated,-2);
+		$updated = str_replace("+00:00", TIME_ZONE, $updated);
+
+		// XML
+		$itemXml = <<<EOS
+  <url>
+    <loc>{$url}</loc>
+    <lastmod>{$updated}</lastmod>
+  </url>
+EOS;
+		$body .= $itemXml . "\n";
+	}
+	$body .= "</urlset>\n";
+
+	// 保存
+	return file_put_contents('./sitemap.xml', $body);
 }
