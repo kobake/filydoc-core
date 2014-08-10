@@ -28,7 +28,7 @@
 
 	<!-- Feed -->
 	{if feedExists()}
-	<link href="{getWebCoreDir()}/feed.xml" rel="alternate" title="Atom" type="application/atom+xml" />
+	<link href="{getWebRootDir()}/feed.xml" rel="alternate" title="Atom" type="application/atom+xml" />
 	{/if}
 
 	<style type="text/css">
