@@ -26,6 +26,11 @@
 	<!-- <link rel="stylesheet/less" type="text/css" href="{getWebCoreDir()}/css/simple-sidebar.less" /> -->
 	<link rel="stylesheet" href="{getWebCoreDir()}/css/simple-sidebar.css" />
 
+	<!-- Feed -->
+	{if feedExists()}
+	<link href="{getWebCoreDir()}/feed.xml" rel="alternate" title="Atom" type="application/atom+xml" />
+	{/if}
+
 	<style type="text/css">
 	</style>
 </head>

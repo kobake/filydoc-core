@@ -17,6 +17,9 @@ function setDefaultTimezone($timezone) {
     }
 }
 // #### 仮
+function feedExists(){
+	return file_exists(APP_ROOT . '/feed.xml');
+}
 function getSiteName(){ // get_dirs を呼ばないとダメ
 	global $g_sitename;
 	if(!isset($g_sitename)){
