@@ -330,6 +330,7 @@ app.controller('PageController', function ($scope, $http, $location, $compile, $
 				// コンテンツ更新
 				//$('#content-section').replaceWith($(data).find('#content-section'));
 				var html = $(data).find('#content-section').html();
+				html = "<div ng-non-bindable>" + html + "</div>"; // コンテンツ内の {{～}} をコンパイルしないようにする。
 				$('#content-section').html($compile(html)($scope));
 
 				// 目次
