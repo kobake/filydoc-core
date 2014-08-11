@@ -22,7 +22,7 @@
 		<!-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
 		<div id="page-content-wrapper"><div><div id="right-wrapper">
 			<section id="content-section">
-				<div ng-controller="RightController">
+				<div ng-controller="RightController" ng-non-bindable>
 					{if isAdminUser()}
 					<div class="page-control clearfix">
 						<a href="#" ng-click="editBegin();" id="page-edit">

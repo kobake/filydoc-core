@@ -162,7 +162,7 @@
 				<div>
 					<div id="right-wrapper">
 						<section id="content-section">
-							<div class="page-content inset">
+							<div class="page-content inset" ng-non-bindable>
 								{$body nofilter}
 							</div>
 						</section>
