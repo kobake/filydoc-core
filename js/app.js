@@ -33,7 +33,7 @@ function generateToc($compile, $scope){
 
 // アンカー文字列構築
 function generateAnchor(str){
-	return str.replace(/[ \#\"\$\!\%\[\]\:\;\?]/g, '_');
+	return str.replace(/[ \#\"\$\!\%\[\]\:\;\?\.]/g, '_');
 }
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
