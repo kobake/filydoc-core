@@ -392,6 +392,30 @@ if(!$search_flag){
 	// 例：[http://www.iconj.com/iphone\_style\_icon\_generator.php](http://www.iconj.com/iphone_style_icon_generator.php)
 
 	if(AutoLinkSettings::ENABLED){
+		// <code>内では自動リンクしない
+		if(true){
+			$body2 = '';
+			$start = 0;
+			while(true){				
+				// <code>範囲取得
+				$codeBegin = mb_strpos($body, '<code>', $start);
+				if($codeBegin === false)break;
+				$codeEnd = mb_strpos($body, '</code>', $codeBegin);
+				if($codeEnd === false)break;
+				$codeEnd += 7;
+				$code = mb_substr($body, $codeBegin, $codeEnd - $codeBegin);
+				// 置換
+				$body2 .= mb_substr($body, $start, $codeBegin - $start);
+				$body2 .= str_replace('http', '&#x68;ttp', $code);
+				// 次
+				$start = $codeEnd;
+			}
+			// 残り
+			$body2 .= mb_substr($body, $start);
+			// 結果
+			$body = $body2;
+		}
+		
 		// 実験：はてな風自動リンク (title取得)
 		//
 		// http://hogehoge/:title みたいな表記があった場合、インターネット上から自動的にタイトルを取得して
