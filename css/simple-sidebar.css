@@ -416,3 +416,6 @@ html,body{
 #content-section {
   word-wrap: break-word;
 }
+pre code {
+  font-family: 'ＭＳ ゴシック';
+}
