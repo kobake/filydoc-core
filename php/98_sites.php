@@ -42,7 +42,7 @@ class SiteManager{
 		if($cnt == 0)return;
 		
 		//タイムアウト時間を決めておく
-		$TIMEOUT = 10; //10秒
+		$TIMEOUT = 8; //8秒
 
 		/*
 		 * 1) 準備
@@ -76,7 +76,9 @@ class SiteManager{
 			$stat = curl_multi_exec($mh, $running); //multiリクエストスタート
 		} while ($stat === CURLM_CALL_MULTI_PERFORM);
 		if ( ! $running || $stat !== CURLM_OK) {
-			throw new RuntimeException('リクエストが開始出来なかった');
+			error_log('リクエストが開始出来なかった');
+			curl_multi_close($mh);
+			return;
 		}
 
 		/*
@@ -97,6 +99,8 @@ class SiteManager{
 				continue 2;
 
 			case 0:  //タイムアウト -> 必要に応じてエラー処理に入るべき
+				error_log("Site title resolution: timeout.");
+				break 2; // タイムアウトにつき抜ける
 				continue 2; //ここではcontinueでリトライします。
 
 			default: //どれかが成功 or 失敗した
@@ -130,11 +134,6 @@ class SiteManager{
 						$title = html2title($response);
 						if($title === false)$title = $url;
 						$state['title'] = $title;
-
-						// DBに保存
-						global $g_db;
-						$stmt = $g_db->prepare('INSERT INTO sites(url, title) VALUES(?, ?)');
-						$stmt->execute(array($url, $title));
 					}
 					curl_multi_remove_handle($mh, $raised['handle']);
 					curl_close($raised['handle']);
@@ -147,8 +146,14 @@ class SiteManager{
 		curl_multi_close($mh);
 	}
 	public function replaceFuture($html){
+		// 候補をすべて置換
 		foreach($this->m_urlStates as $url => $state){
+			// 置換
 			$html = str_replace($state['title_future'], htmlspecialchars($state['title']), $html);
+			// ついでにDB保存
+			global $g_db;
+			$stmt = $g_db->prepare('INSERT INTO sites(url, title) VALUES(?, ?)');
+			$stmt->execute(array($url, $state['title']));
 		}
 		return $html;
 	}
