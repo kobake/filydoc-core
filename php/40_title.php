@@ -4,6 +4,7 @@ function getTitleItems()
 {
 	$webpath = urldecode($_SERVER['REQUEST_URI']);
 	$webpath = preg_replace('/^' . preg_quote(getWebRootDir(), '/') . '/', '', $webpath); // 頭の /memo を削る
+	$webpath = preg_replace('/\?.*/', '', $webpath);
 	$webpath = preg_replace('/\.html$/', '', $webpath);
 	$webpath = preg_replace('/\/index$/', '', $webpath);
 	$names = explode('/', $webpath); // [Top, Ubuntu, samba]
