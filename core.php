@@ -120,6 +120,7 @@ if(GitHubSettings::ENABLED){
 	require_once(APP_ROOT . '/php/96_github.php');
 }
 require_once(APP_ROOT . '/php/97_feed.php');
+require_once(APP_ROOT . '/php/98_sites.php');
 
 // Markdown Extra
 require_once(APP_ROOT . '/php/libs/markdown.php');
@@ -445,55 +446,16 @@ if(!$search_flag){
 				}
 			}
 
-			// DB接続、TABLE作成
-			global $g_db;
-			if(!isset($g_db)){
-				$g_db = new PDO("sqlite:" . TMP_ROOT . '/sites.db', "", "");
-				if($g_db){
-					$ret = $g_db->exec(
-						'CREATE TABLE sites(id INTEGER PRIMARY KEY AUTOINCREMENT, url VARCHAR(255), title VARCHAR(255))'
-					);
-					// echo "$ret\n";
-
-					$ret = $g_db->exec(
-						'CREATE UNIQUE INDEX url ON sites(url)'
-					);
-					// echo "$ret\n";
-				}
-			}
-
-			// DB接続に失敗している場合は負荷が気になるので名前取得処理自体をやめる
-			if(!$g_db){
-				return "{$left}<a href=\"{$url}\">{$url}</a>"; // URLのままで表示
-			}
-
-			// DBから取得
-			$stmt = $g_db->prepare('SELECT id, url, title FROM sites WHERE url = ?');
-			$stmt->execute(array($url));
-			$record = $stmt->fetch(PDO::FETCH_ASSOC);
-			if($record){
-				$title = $record['title'];
-				return "{$left}<a href=\"{$url}\">{$title}</a>";
-			}
-
-			// インターネットから取得
-			$title = $url;
-			$body = @file_get_contents($url);
-			if($body !== false){
-				$body = mb_convert_encoding($body, 'utf-8', 'auto');
-				if(preg_match('/<title>([^<]*)<\/title>/si', $body, $m)) {
-					$title = $m[1];
-					$title = trim($title);
-				}
-			}
-
-			// DBに保存
-			$stmt = $g_db->prepare('INSERT INTO sites(url, title) VALUES(?, ?)');
-			$stmt->execute(array($url, $title));
+			// とりあえず仮
+			$title = url2title($url);
 
 			// 結果
 			return "{$left}<a href=\"{$url}\">{$title}</a>";
 		}, $body);
+
+		// 本仮
+		url2title_wait();
+		$body = url2title_replace_others($body);
 	}
 
 	// 自動リンク
