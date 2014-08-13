@@ -1,8 +1,13 @@
 <?php
+
+function error_log_multi($str){
+	$a = explode("\n", $str);
+	foreach($a as $line)error_log($line);
+}
+
 /*
  * サイト名管理
  */
-
 class SiteManager{
 	// Singleton
 	public static function instance(){
@@ -19,6 +24,11 @@ class SiteManager{
 	}
 
 	public function pushUrl($url){
+		// 登録済みなら、それを返す
+		if(isset($this->m_urlStates[$url])){
+			return $this->m_urlStates[$url]['title_future'];
+		}
+		// 登録
 		$index = count($this->m_urlStates);
 		$state = array(
 			'url' => $url,
@@ -53,18 +63,23 @@ class SiteManager{
 		 *  - 全てcurl_multiハンドラに追加
 		 */
 		$mh = curl_multi_init();
-		foreach ($this->m_urlStates as $url => &$state) {
+		foreach ($this->m_urlStates as $url => &$st) {
 			$ch = curl_init();
-			$state['ch'] = $ch;
-			$state['state'] = 1;
 			curl_setopt_array($ch, array(
 				CURLOPT_URL            => $url,
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_TIMEOUT        => $TIMEOUT,
 				CURLOPT_CONNECTTIMEOUT => $TIMEOUT,
+				CURLOPT_FOLLOWLOCATION => true,
+				CURLOPT_MAXREDIRS      => 4,
+				CURLOPT_MAXCONNECTS    => 10,
 			));
 			curl_multi_add_handle($mh, $ch);
+			//
+			$st['ch'] = $ch;
+			$st['state'] = 1;
 		}
+		// error_log_multi("==============m_urlStates = " . var_export($this->m_urlStates, true));
 
 		/*
 		 * 2) リクエストを開始する
@@ -111,6 +126,8 @@ class SiteManager{
 				do if ($raised = curl_multi_info_read($mh, $remains)) {
 					// 変化のあったcurlハンドラを取得する
 					$info = curl_getinfo($raised['handle']);
+					// error_log_multi("==============raised = " . var_export($raised, true));
+					// error_log_multi("==============info = " . var_export($info, true));
 					// echo "{$info['url']}: {$info['http_code']}\n";
 					$response = curl_multi_getcontent($raised['handle']);
 
@@ -122,18 +139,27 @@ class SiteManager{
 						//正常にレスポンス取得
 						// echo $response, PHP_EOL;
 
-						// state取得
-						$url = $info['url'];
-						if(!isset($this->m_urlStates[$url])){
+						// state取得 -> $pstate
+						unset($pstate);
+						$pstate = null;
+						foreach($this->m_urlStates as $url => &$state){
+							if($state['ch'] === $raised['handle']){
+								$pstate = &$state;
+								// error_log("!!!!!!!OK!!!!!!!!!! " . $state['url']);
+							}
+						}
+						if(!$pstate){
 							error_log("state not found. URL:{$info['url']}");
 							continue;
 						}
-						$state = &$this->m_urlStates[$url];
-
+						
 						// title取得
 						$title = html2title($response);
-						if($title === false)$title = $url;
-						$state['title'] = $title;
+						if($title === false){
+							error_log("html title not found. OriginalURL:{$pstate['url']} RedirectURL:{$info['url']}");
+							$title = $pstate['url'];
+						}
+						$pstate['title'] = $title;
 					}
 					curl_multi_remove_handle($mh, $raised['handle']);
 					curl_close($raised['handle']);
