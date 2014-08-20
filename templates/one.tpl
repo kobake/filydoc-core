@@ -22,7 +22,7 @@
 		<!-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
 		<div id="page-content-wrapper"><div><div id="right-wrapper">
 			<section id="content-section">
-				<div ng-controller="RightController" ng-non-bindable>
+				<div ng-controller="RightController">
 					{if isAdminUser()}
 					<div class="page-control clearfix">
 						<a href="#" ng-click="editBegin();" id="page-edit">
@@ -36,38 +36,35 @@
 					</div>
 					{/if}
 
-					<!--
-					<div id="error-message-writable" class="error-message">
-						Empty
-					</div>
-					-->
-					<div id="error-message" class="error-message">
-						Empty2
-					</div>
+					<div class="ng-non-bindable">
+						<div id="error-message" class="error-message">
+							Empty2
+						</div>
 
-					<div class="content-header">
-						<h1>
-							{$metas['h1title']}
-						</h1>
-					</div>
-					<div class="page-content inset">
-						<!-- 内部目次 -->
-						<div class="toc">
-							<div class="toc-title">
-								Contents
-							</div>
-							<div class="toc-content">
-								<ol>
-								</ol>
-							</div>
+						<div class="content-header">
+							<h1>
+								{$metas['h1title']}
+							</h1>
 						</div>
-						<div class="toc-dummy">
+						<div class="page-content inset">
+							<!-- 内部目次 -->
+							<div class="toc">
+								<div class="toc-title">
+									Contents
+								</div>
+								<div class="toc-content">
+									<ol>
+									</ol>
+								</div>
+							</div>
+							<div class="toc-dummy">
+							</div>
+							<!-- 本体 -->
+							{$body nofilter}
 						</div>
-						<!-- 本体 -->
-						{$body nofilter}
+						{* getSocialButtons() nofilter *}
+						{getPageFoot()}
 					</div>
-					{* getSocialButtons() nofilter *}
-					{getPageFoot()}
 				</div>
 			</section>
 		</div></div></div>
