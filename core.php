@@ -189,8 +189,8 @@ if($uri_without_query == getWebRootDir() . '/search.html' || $uri_without_query 
 
 // 検索でない場合、大文字URLを小文字に補正
 if(!$search_flag){
-	if(preg_match('/[A-Z]/', $_SERVER['REQUEST_URI'])){
-		$url = strtolower($_SERVER['REQUEST_URI']);
+	if(preg_match('/[A-Z]/', $uri_without_query)){
+		$url = strtolower($uri_without_query);
 		header("HTTP/1.1 301 Moved Permanently");
 		header("Location: $url");
 		exit(0);
@@ -378,8 +378,28 @@ foreach($defaults as $key => $value){
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // コンテンツHTML変換
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
-// 本文Markdown処理
-$body = Michelf\MarkdownExtra::defaultTransform($text);
+if(preg_match('/\.md$/', $templateItem['realpath']) || $templateItem['type'] === 'dir'){
+	// 本文Markdown処理
+	$body = Michelf\MarkdownExtra::defaultTransform($text);
+}
+elseif(preg_match('/\.java$/', $templateItem['realpath'])){
+	// 本文Java色分け処理
+	// $body = Michelf\MarkdownExtra::defaultTransform($text);
+	// プレーン表示
+	$body = $text;
+	$body = preg_replace('/\t/', "    ", $body);
+	$body = "<pre>{$body}</pre>";
+	//$body = preg_replace('/\n/', "<br/>\n", $body);
+	//$body = preg_replace('/ /', "&nbsp;", $body);
+}
+else{
+	// プレーン表示
+	$body = $text;
+	$body = preg_replace('/\t/', "    ", $body);
+	$body = "<pre>{$body}</pre>";
+	//$body = preg_replace('/\n/', "<br/>\n", $body);
+	//$body = preg_replace('/ /', "&nbsp;", $body);
+}
 
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //

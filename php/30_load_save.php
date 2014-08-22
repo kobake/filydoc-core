@@ -8,9 +8,16 @@
 function loadText($templateItem)
 {
 	$text = false;
+	// .mdはそのまま内容を返す
 	if(preg_match('/\.md$/', $templateItem['realpath'])){
 		$text = @file_get_contents($templateItem['realpath']);
 	}
+	// .javaはそのまま内容を返す
+	elseif(preg_match('/\.java$/', $templateItem['realpath'])){
+		$text = @file_get_contents($templateItem['realpath']);
+	}
+	
+	// ディレクトリはその中のアイテム一覧をmarkdown化したものを返す
 	if($text === false && $templateItem['type'] == 'dir') {
 		// リスティングとしての.mdテキストを構築する
 		$webroot = getWebRootDir();
