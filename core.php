@@ -390,6 +390,9 @@ elseif(preg_match('/\.java$/', $templateItem['realpath'])){
 	// Java色分け処理
 	require(APP_ROOT . '/php/libs/geshi/geshi.php');
 	$geshi =& new GeSHi($body, 'java');
+	//$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+	$geshi->enable_keyword_links(false);
+
 	$body = $geshi->parse_code();
 	
 	// $body = "<pre>{$body}</pre>";
