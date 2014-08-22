@@ -383,8 +383,12 @@ if(preg_match('/\.md$/', $templateItem['realpath']) || $templateItem['type'] ===
 	$body = Michelf\MarkdownExtra::defaultTransform($text);
 }
 elseif(preg_match('/\.java$/', $templateItem['realpath'])){
-	// タブを4スペースに変換
 	$body = $text;
+	
+	// 前後改行を除去
+	$body = trim($body);
+	
+	// タブを4スペースに変換
 	$body = preg_replace('/\t/', "    ", $body);
 	
 	// Java色分け処理
