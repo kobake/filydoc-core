@@ -383,14 +383,16 @@ if(preg_match('/\.md$/', $templateItem['realpath']) || $templateItem['type'] ===
 	$body = Michelf\MarkdownExtra::defaultTransform($text);
 }
 elseif(preg_match('/\.java$/', $templateItem['realpath'])){
-	// 本文Java色分け処理
-	// $body = Michelf\MarkdownExtra::defaultTransform($text);
-	// プレーン表示
+	// タブを4スペースに変換
 	$body = $text;
 	$body = preg_replace('/\t/', "    ", $body);
-	$body = "<pre>{$body}</pre>";
-	//$body = preg_replace('/\n/', "<br/>\n", $body);
-	//$body = preg_replace('/ /', "&nbsp;", $body);
+	
+	// Java色分け処理
+	require(APP_ROOT . '/php/libs/geshi/geshi.php');
+	$geshi =& new GeSHi($body, 'java');
+	$body = $geshi->parse_code();
+	
+	// $body = "<pre>{$body}</pre>";
 }
 else{
 	// プレーン表示
