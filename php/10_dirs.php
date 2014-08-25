@@ -377,10 +377,10 @@ function _get_dirs($real_path, $web_path)
 		else if(preg_match('/\.txt$/', $item['name'])) { // .txtファイル
 			$item['type'] = 'file';
 
-			// 拡張子は除去しない
-			// $item['key'] = preg_replace('/\.[A-Za-z0-9]+$/', '', $item['key']); // 拡張子を除去
-			// $item['name'] = preg_replace('/\.[A-Za-z0-9]+$/', '', $item['name']); // 拡張子を除去
-			// $item['webpath'] = preg_replace('/\.[A-Za-z0-9]+$/', '', $item['webpath']); // 拡張子を除去
+			// 拡張子は除去
+			$item['key'] = preg_replace('/\.[A-Za-z0-9]+$/', '', $item['key']); // 拡張子を除去
+			$item['name'] = preg_replace('/\.[A-Za-z0-9]+$/', '', $item['name']); // 拡張子を除去
+			$item['webpath'] = preg_replace('/\.[A-Za-z0-9]+$/', '', $item['webpath']); // 拡張子を除去
 		}
 		else{ // それ以外は無視
 			continue;
