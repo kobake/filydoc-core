@@ -33,8 +33,24 @@ function searchAndGenerateMarkdownText($keyword)
 				// 共通加工 -> $tmp
 				$tmp = $realpath;
 				$tmp = preg_replace('/' . preg_quote($dir_path, '/') . '/', '', $tmp); // パス省略
-				$tmp = preg_replace('/\.md/', '', $tmp, -1, $count); // 拡張子除去
-				if($count <= 0)continue; // .md でないファイルは除外
+				$ext = '';
+				if(preg_match('/\.([a-z]+)$/', $tmp, $m)){
+					$ext = $m[0];
+				}
+				if($ext === '.md'){
+					// 拡張子除去
+					$tmp = preg_replace("/\\{$ext}/", '', $tmp);
+				}
+				elseif($ext === '.java'){
+					// 拡張子は除去しない
+				}
+				elseif($ext === '.txt'){
+					// 拡張子除去
+					$tmp = preg_replace("/\\{$ext}/", '', $tmp);
+				}
+				else{
+					continue; // 対象の拡張子が無いファイルは除外
+				}
 				// $tmp -> $webpath
 				$webpath = $tmp;
 				$webpath = preg_replace('/\/[0-9]+\_/', '/', $webpath); // 先頭数字を除去
