@@ -384,13 +384,13 @@ if(preg_match('/\.md$/', $templateItem['realpath']) || $templateItem['type'] ===
 }
 elseif(preg_match('/\.java$/', $templateItem['realpath'])){
 	$body = $text;
-	
+
 	// 前後改行を除去
 	$body = trim($body);
-	
+
 	// タブを4スペースに変換
 	$body = preg_replace('/\t/', "    ", $body);
-	
+
 	// Java色分け処理
 	require(APP_ROOT . '/php/libs/geshi/geshi.php');
 	$geshi =& new GeSHi($body, 'java');
@@ -398,8 +398,20 @@ elseif(preg_match('/\.java$/', $templateItem['realpath'])){
 	$geshi->enable_keyword_links(false);
 
 	$body = $geshi->parse_code();
-	
+
 	// $body = "<pre>{$body}</pre>";
+}
+elseif(preg_match('/\.txt$/', $templateItem['realpath'])){
+	$body = $text;
+
+	// 前後改行を除去
+	$body = trim($body);
+
+	// タブを4スペースに変換
+	$body = preg_replace('/\t/', "    ", $body);
+
+	// そのまま表示
+	$body = "<pre>{$body}</pre>";
 }
 else{
 	// プレーン表示
@@ -415,7 +427,7 @@ else{
 // コンテンツ加工
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // 本文自動リンク処理（Markdown形式）※""で囲まれているURLはAタグの可能性があるので、何もしない
-//$body = preg_replace('/([^\"])(https?\:\/\/[\w\/\:%#\$&\?\(\)~\.=\+\-]+)/', '\1[\2](\2)', $body);
+//$body = preg_replace('/([^\"])(https?\:\/\/[\w\/\:%#\$&\?\!\(\)~\.=\+\-]+)/', '\1[\2](\2)', $body);
 // phpinfo();exit(0);
 if(!$search_flag){
 	// URL文字列の途中にアンダースコアが含まれている場合は \ でエスケープする必要がある（気持ち悪い…）(Markdownの場合) (現在はMarkdown Extraなのでエスケープ処理不要)
@@ -451,7 +463,7 @@ if(!$search_flag){
 		// http://hogehoge/:title みたいな表記があった場合、インターネット上から自動的にタイトルを取得して
 		// <a href="http://hogehoge/">たいとる</a> のようなリンクに変換する
 		// タイトルは tmp/sites.db にキャッシュされ、次回からはキャッシュを優先する
-		$body = preg_replace_callback('/([^\"])(https?\:\/\/[\w\/\:\;%#\$&\?\(\)~\.=\+\-]+)/', function($m){
+		$body = preg_replace_callback('/([^\"])(https?\:\/\/[\w\/\:\;%#\$&\?\!\(\)~\.=\+\-]+)/', function($m){
 			// matched
 			$left = $m[1];
 			$url = $m[2];
@@ -488,7 +500,7 @@ if(!$search_flag){
 	}
 
 	// 自動リンク
-	// $body = preg_replace('/([^\"])(https?\:\/\/[\w\/\:\;%#\$&\?\(\)~\.=\+\-]+)/', '\1<a href="\2">\2</a>', $body);
+	// $body = preg_replace('/([^\"])(https?\:\/\/[\w\/\:\;%#\$&\?\!\(\)~\.=\+\-]+)/', '\1<a href="\2">\2</a>', $body);
 }
 
 

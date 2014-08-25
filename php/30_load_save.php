@@ -16,7 +16,11 @@ function loadText($templateItem)
 	elseif(preg_match('/\.java$/', $templateItem['realpath'])){
 		$text = @file_get_contents($templateItem['realpath']);
 	}
-	
+	// .txtはそのまま内容を返す
+	elseif(preg_match('/\.txt/', $templateItem['realpath'])){
+		$text = @file_get_contents($templateItem['realpath']);
+	}
+
 	// ディレクトリはその中のアイテム一覧をmarkdown化したものを返す
 	if($text === false && $templateItem['type'] == 'dir') {
 		// リスティングとしての.mdテキストを構築する
