@@ -378,7 +378,7 @@ foreach($defaults as $key => $value){
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // コンテンツHTML変換
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
-if(preg_match('/\.md$/', $templateItem['realpath']) || $templateItem['type'] === 'dir'){
+if($search_flag || preg_match('/\.md$/', $templateItem['realpath']) || $templateItem['type'] === 'dir'){
 	// 本文Markdown処理
 	$body = Michelf\MarkdownExtra::defaultTransform($text);
 }
