@@ -1,6 +1,6 @@
 <?php
 
-define('CACHE_VERSION', 'cache1.13');
+define('CACHE_VERSION', 'cache1.14');
 // echo "ほげ"
 // @param String $real_path
 // @param String $web_path
@@ -366,7 +366,7 @@ function _get_dirs($real_path, $web_path)
 			$item['name'] = preg_replace('/\.[A-Za-z0-9]+$/', '', $item['name']); // 拡張子を除去
 			$item['webpath'] = preg_replace('/\.[A-Za-z0-9]+$/', '', $item['webpath']); // 拡張子を除去
 		}
-		else if(preg_match('/\.java$/', $item['name'])) { // .javaファイル
+		else if(preg_match('/\.(java|php)$/', $item['name'])) { // .java, .php
 			$item['type'] = 'file';
 
 			// 拡張子は除去しない

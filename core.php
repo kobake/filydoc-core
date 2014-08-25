@@ -382,7 +382,7 @@ if($search_flag || preg_match('/\.md$/', $templateItem['realpath']) || $template
 	// 本文Markdown処理
 	$body = Michelf\MarkdownExtra::defaultTransform($text);
 }
-elseif(preg_match('/\.java$/', $templateItem['realpath'])){
+elseif(preg_match('/\.(java|php)$/', $templateItem['realpath'], $m)){
 	$body = $text;
 
 	// 前後改行を除去
@@ -393,7 +393,7 @@ elseif(preg_match('/\.java$/', $templateItem['realpath'])){
 
 	// Java色分け処理
 	require(APP_ROOT . '/php/libs/geshi/geshi.php');
-	$geshi =& new GeSHi($body, 'java');
+	$geshi =& new GeSHi($body, $m[1]); // java or php
 	//$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 	$geshi->enable_keyword_links(false);
 

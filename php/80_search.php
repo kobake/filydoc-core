@@ -41,7 +41,7 @@ function searchAndGenerateMarkdownText($keyword)
 					// 拡張子除去
 					$tmp = preg_replace("/\\{$ext}/", '', $tmp);
 				}
-				elseif($ext === '.java'){
+				elseif($ext === '.java' || $ext === '.php'){
 					// 拡張子は除去しない
 				}
 				elseif($ext === '.txt'){

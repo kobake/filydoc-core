@@ -12,8 +12,8 @@ function loadText($templateItem)
 	if(preg_match('/\.md$/', $templateItem['realpath'])){
 		$text = @file_get_contents($templateItem['realpath']);
 	}
-	// .javaはそのまま内容を返す
-	elseif(preg_match('/\.java$/', $templateItem['realpath'])){
+	// .java, .php はそのまま内容を返す
+	elseif(preg_match('/\.(java|php)$/', $templateItem['realpath'])){
 		$text = @file_get_contents($templateItem['realpath']);
 	}
 	// .txtはそのまま内容を返す
