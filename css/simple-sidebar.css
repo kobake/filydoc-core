@@ -418,7 +418,9 @@ html,body{
 }
 pre code {
   font-family: 'ＭＳ ゴシック';
+  letter-spacing: 0.1em;
 }
 blockquote {
   font-family: 'ＭＳ ゴシック';
+  letter-spacing: 0.1em;
 }
