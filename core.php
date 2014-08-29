@@ -122,6 +122,22 @@ if(GitHubSettings::ENABLED){
 require_once(APP_ROOT . '/php/97_feed.php');
 require_once(APP_ROOT . '/php/98_sites.php');
 
+// テスト
+if(false){
+	$url = 'http://www.ne.jp/asahi/kuribara/hiroshi/cvstop.html';
+	$html = @file_get_contents($url);
+	$title = html2title($html);
+	print("title=$title\n");
+	/*
+	$title = url2title($url);
+	print("title=$title\n");
+	url2title_wait();
+	$title = url2title_replace_others($title);
+	print("title=$title\n");
+	*/
+	exit(0);
+}
+
 // Markdown Extra
 require_once(APP_ROOT . '/php/libs/markdown.php');
 //set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . '/php/libs/php-markdown');

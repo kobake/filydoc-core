@@ -258,7 +258,7 @@ function html2title($html){
 		$node = $e->attributes->getNamedItem("http-equiv");
 		if($node && strcasecmp($node->nodeValue, 'content-type') == 0){
 			$node = $e->attributes->getNamedItem("content");
-			if($node && preg_match('/[\; ]charset ?\= ?([A-Za-z0-9\-\_]+)/', $node->nodeValue, $m)){
+			if($node && preg_match('/[\; ]charset ?\= ?([A-Za-z0-9\-\_]+)/i', $node->nodeValue, $m)){
 				$charset = $m[1];
 				break;
 			}
