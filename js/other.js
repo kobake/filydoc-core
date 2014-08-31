@@ -4,6 +4,21 @@ $(function () {
 		$("#wrapper").toggleClass("active");
 	});
 
+	// textareaでtab入力できるように。
+	// http://d.hatena.ne.jp/hokaccha/20111028/1319814792
+	jQuery(function(){
+		jQuery(document).on('keydown', 'textarea', function(e) {
+			if (e.keyCode === 9) {
+				e.preventDefault();
+				var elem = e.target;
+				var val = elem.value;
+				var pos = elem.selectionStart;
+				elem.value = val.substr(0, pos) + '\t' + val.substr(pos, val.length);
+				elem.setSelectionRange(pos + 1, pos + 1);
+			}
+		});
+	});
+
 	// 外部サイトへのリンクターゲットを_blankに変更
 	$("a[href^='http']")
 		.not("[href*='" + location.host + "']")
