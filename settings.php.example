@@ -15,7 +15,7 @@ class GitHubSettings{
 
 	// GitHub accounts allowed to edit contents; comma separated list.
 	//   Ex) "kobake,john,koji"
-	const ACCOUNTS_ADMIN = "kobake";
+	const ADMIN_ACCOUNTS = "kobake";
 }
 
 // Auto link settings
