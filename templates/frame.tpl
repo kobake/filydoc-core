@@ -9,7 +9,11 @@
 	{/if}
 
 	<!-- favicon -->
+	{if preg_match('/(local|virtualbox)/', $_SERVER['SERVER_NAME']) !== false}
+	<link rel="icon" type="image/png" href="/favicon_local.png" />
+	{else}
 	<link rel="icon" type="image/png" href="/favicon.png" />
+	{/if}
 
 	<!-- OGP -->
 	<meta property="og:site_name" content="{getSiteName()}" data-webroot="{getWebRootDir()}" />

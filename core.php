@@ -530,6 +530,7 @@ $smarty->template_dir = APP_ROOT . '/.';
 $smarty->compile_dir = TMP_ROOT . '/smarty/templates_c/';
 $smarty->config_dir = TMP_ROOT . '/smarty/config/';
 $smarty->cache_dir = TMP_ROOT . '/smarty/cache/';
+$smarty->assign('_SERVER', $_SERVER);
 $smarty->assign('metas', $metas);
 $smarty->assign('dirs', $dirs);
 $smarty->assign('GITHUB_ENABLED', GitHubSettings::ENABLED);
