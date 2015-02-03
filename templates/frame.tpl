@@ -91,7 +91,7 @@
 
 					{if $GITHUB_ENABLED}
 					<ul class="nav navbar-nav pull-right">
-						{if $username == ''}
+						{if $username === ''}
 							<li>
 								<a href="{getWebRootDir()}/login">Log in</a>
 							</li>

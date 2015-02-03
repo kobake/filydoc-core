@@ -14,10 +14,10 @@ function _get_items_html($items, $indent, $level)
 	$i = 0;
 	$webroot = getWebRootDir();
 	foreach($items as $item){
-		if($item['name'] == 'index')continue;
+		if($item['name'] === 'index')continue;
 		$ret .= $indent . "<li>\n";
 		$ret .= $indent . "  <a href='{$webroot}{$item['webpath']}'><span>{$item['name']}</span></a>\n";
-		if($item['type'] == 'dir'){
+		if($item['type'] === 'dir'){
 			if(isset($item['children']) && count($item['children']) > 0){
 				$ret .= _get_items_html($item['children'], $indent . '    ', $level + 1);
 			}

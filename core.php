@@ -160,7 +160,7 @@ function frameContent()
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // Usage:
 //   php core.php feed       : Generate feed.xml
-if(php_sapi_name() == 'cli') {
+if(php_sapi_name() === 'cli') {
 	if(in_array('feed', $argv)){
 		print("Feed generating...\n");
 		generateFeed();
@@ -272,7 +272,7 @@ $dirs = get_dirs();
 // 自分が管理者かどうか判定
 function isAdminUser(){
 	if(!GitHubSettings::ENABLED)return false;
-	if($_SESSION['github_username'] == '')return false;
+	if($_SESSION['github_username'] === '')return false;
 	$admin_accounts = explode(',', GitHubSettings::ADMIN_ACCOUNTS);
 	if(in_array($_SESSION['github_username'], $admin_accounts)){
 		return true;
@@ -310,7 +310,7 @@ else{
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // PUTを受け取る場合
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
-if($templateItem && $one_flag === 'md' && $_SERVER['REQUEST_METHOD'] == 'PUT') {
+if($templateItem && $one_flag === 'md' && $_SERVER['REQUEST_METHOD'] === 'PUT') {
 	header('Content-type: application/json; charset=UTF-8');
 	// print(var_export($_SERVER, true) . "\n");
 	// print(var_export($_POST, true) . "\n");
@@ -495,12 +495,12 @@ if(!$search_flag){
 			}
 
 			// :notitle指定なら取得しない
-			if($flag == ':notitle'){
+			if($flag === ':notitle'){
 				return "{$left}<a href=\"{$url}\">{$url}</a>"; // URLのままで表示
 			}
 
 			// flag指定が無い場合はAutoLinkSettings::AUTO_TITLEに従う
-			if($flag == ''){
+			if($flag === ''){
 				if(!AutoLinkSettings::AUTO_TITLE){
 					return "{$left}<a href=\"{$url}\">{$url}</a>"; // URLのままで表示
 				}
@@ -537,6 +537,9 @@ $smarty->assign('_SERVER', $_SERVER);
 $smarty->assign('metas', $metas);
 $smarty->assign('dirs', $dirs);
 $smarty->assign('GITHUB_ENABLED', GitHubSettings::ENABLED);
+if(isset($templateItem)){
+	$smarty->assign('templateItem', $templateItem);
+}
 if(GitHubSettings::ENABLED) {
 	$smarty->assign('username', $_SESSION['github_username']);
 }
@@ -576,6 +579,6 @@ if(!$one_flag){
 	$smarty->assign('dirs_json', json_encode($dirs));
 	$smarty->display(APP_ROOT . '/templates/frame.tpl');
 }
-else if($one_flag == 'html'){
+else if($one_flag === 'html'){
 	$smarty->display(APP_ROOT . '/templates/one.tpl');
 }

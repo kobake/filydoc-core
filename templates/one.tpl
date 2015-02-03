@@ -61,6 +61,12 @@
 							</div>
 							<!-- 本体 -->
 							{$body nofilter}
+							<!-- アイテム追加ボタン -->
+							{if isAdminUser() && isset($templateItem) && $templateItem['type'] === 'dir'}
+								<div style="margin-left: 20px; margin-top: 16px;" id="index-items-bottom">
+									<a class="btn btn-default">新規アイテム</a>
+								</div>
+							{/if}
 						</div>
 						{* getSocialButtons() nofilter *}
 						{getPageFoot()}

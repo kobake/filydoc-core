@@ -114,7 +114,7 @@ function getWebPathForAjax($location, ext){
 	// webpath
 	var webpath = $location.path(); // "/memo/Windows/Excel" みたいな感じ。
 	webpath = webpath.replace(/\/$/, '');
-	if (webpath == '') {
+	if (webpath === '') {
 		webpath = window.g_webroot;
 	}
 	console.log("webpath = " + webpath);
@@ -148,7 +148,7 @@ function getWebPathForAjax($location, ext){
 	//$location.
 	var menu = window.g_webpath2item[webpath2];
 	if (menu) {
-		if (menu.type == 'dir') {
+		if (menu.type === 'dir') {
 			ajaxpath = (window.g_webroot + webpath2 + '/index.' + ext).replace('//', '/'); // 例：/memo/Chrome.html
 		}
 	}

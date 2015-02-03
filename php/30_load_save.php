@@ -22,7 +22,7 @@ function loadText($templateItem)
 	}
 
 	// ディレクトリはその中のアイテム一覧をmarkdown化したものを返す
-	if($text === false && $templateItem['type'] == 'dir') {
+	if($text === false && $templateItem['type'] === 'dir') {
 		// リスティングとしての.mdテキストを構築する
 		$webroot = getWebRootDir();
 		if ($templateItem['children']) {
@@ -34,9 +34,6 @@ function loadText($templateItem)
 			}
 			// 最下部にアイテム追加ボタンを付ける
 			$text .= <<< EOS
-			<div style="margin-left: 20px; margin-top: 16px;" id="index-items-bottom">
-				<a class="btn btn-default">新規アイテム</a>
-			</div>
 EOS;
 		}
 	}

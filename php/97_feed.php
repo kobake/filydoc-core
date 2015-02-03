@@ -27,7 +27,7 @@ function dirs2items($dirs)
 function _dirs2items($items, &$out_items)
 {
 	foreach($items as $item){
-		if($item['type'] == 'dir'){
+		if($item['type'] === 'dir'){
 			if(isset($item['children']) && count($item['children']) > 0){
 				_dirs2items($item['children'], $out_items);
 			}

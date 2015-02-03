@@ -253,7 +253,7 @@ function _make_hash($dirs)
 		$g_webpath2item[$item['webpath']] = $item; // ここはフォルダと.mdで重複する可能性がある。.md優先。
 		
 		// ディレクトリの場合は {webpath}/index を別名として記録する
-		if($item['type'] == 'dir'){
+		if($item['type'] === 'dir'){
 			$registered_item = $item;
 			
 			// エイリアス
@@ -287,7 +287,7 @@ function _cut_duplicated_items($parent, &$dirs)
 		// 子要素としてindexがあればそれを削除し、realpathのみ受け継ぐ
 		if(isset($item['children'])){
 			foreach($item['children'] as &$child){
-				if($child['name'] == 'index'){
+				if($child['name'] === 'index'){
 					$child['delete'] = 1; // 削除予約
 					$item['realpath'] = $child['realpath']; // realpath は .md のものを引き継ぐ
 					$item['hoge'] = 1;
@@ -306,7 +306,7 @@ function _cut_duplicated_items($parent, &$dirs)
 	
 	// 削除処理
 	$dirs = array_filter($dirs, function($a){
-		// if($a['type'] == 'file' && $name_counts[$a['name']] >= 2){
+		// if($a['type'] === 'file' && $name_counts[$a['name']] >= 2){
 		//	return false; // 削除する
 		// }
 		if(isset($a['delete']))return false; // 削除する
