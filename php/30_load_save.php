@@ -26,6 +26,7 @@ function loadText($templateItem)
 		// リスティングとしての.mdテキストを構築する
 		$webroot = getWebRootDir();
 		if ($templateItem['children']) {
+			$text = "<!-- index items -->\n\n";
 			foreach ($templateItem['children'] as $child) {
 				$webpath = $child['webpath'];
 				$webpath = implode('/', array_map('rawurlencode', explode('/', $child['webpath'])));
