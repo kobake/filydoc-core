@@ -32,6 +32,12 @@ function loadText($templateItem)
 				$webpath = implode('/', array_map('rawurlencode', explode('/', $child['webpath'])));
 				$text .= "- [{$child['name']}]({$webroot}{$webpath})\n";
 			}
+			// 最下部にアイテム追加ボタンを付ける
+			$text .= <<< EOS
+			<div style="margin-left: 20px; margin-top: 16px;" id="index-items-bottom">
+				<a class="btn btn-default">新規アイテム</a>
+			</div>
+EOS;
 		}
 	}
 	if($text === false)$text = '';

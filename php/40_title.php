@@ -37,14 +37,18 @@ function getTitleItems()
 function getH1Title($items)
 {
 	$webroot = getWebRootDir(); // /memo
+	// var_dump($_SERVER['SCRIPT_NAME']);exit;
+	// var_dump($webroot);exit;
 	$ret = "";
 	$ret .= "<ol class='breadcrumb' style='padding: 0px;'>\n";
 	foreach($items as $index => $item){
 		if($index == count($items) - 1){
-			$ret .= "<li class='active'><span><span>{$item['name']}</span></li>\n";
+			$ret .= "<li class='active'><span>{$item['name']}</span></li>\n";
 		}
 		else if($index == 0){
-			$ret .= "<li><span><a href='{$webroot}'><span>{$item['name']}</span></a></li>\n";
+			$tmp = $webroot;
+			if($tmp === '')$tmp = '/';
+			$ret .= "<li><span><a href='{$tmp}'><span>{$item['name']}</span></a></li>\n";
 		}
 		else{
 			$ret .= "<li><span><a href='{$webroot}{$item['webpath']}'><span>{$item['name']}</span></a></li>\n";

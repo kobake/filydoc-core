@@ -61,7 +61,10 @@ function getPageTitle(){
 	return preg_replace('/^Top - /', '', $metas['headtitle']);
 }
 function getWebRootDir(){ // 例：/memo
-	return preg_replace('/\/index\.php$/', '', $_SERVER['SCRIPT_NAME']); // SCRIPT_NAME … /memo/index.php   PHP_SELF … /memo/index.php/hoggehoge
+	$ret = preg_replace('/\/index\.php$/', '', $_SERVER['SCRIPT_NAME']); // SCRIPT_NAME … /memo/index.php   PHP_SELF … /memo/index.php/hoggehoge
+	// var_dump($ret);exit;
+	return $ret;//if($ret === '')$ret = '/';
+	return $ret;
 }
 function getWebCoreDir(){ // 例：/memo/filydoc-core
 	return getWebRootDir() . "/filydoc-core";
@@ -307,7 +310,7 @@ else{
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // PUTを受け取る場合
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
-if($templateItem && $one_flag == 'md' && $_SERVER['REQUEST_METHOD'] == 'PUT') {
+if($templateItem && $one_flag === 'md' && $_SERVER['REQUEST_METHOD'] == 'PUT') {
 	header('Content-type: application/json; charset=UTF-8');
 	// print(var_export($_SERVER, true) . "\n");
 	// print(var_export($_POST, true) . "\n");
@@ -352,7 +355,7 @@ if($templateItem && $one_flag == 'md' && $_SERVER['REQUEST_METHOD'] == 'PUT') {
 // そのまま出力する場合
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 $page_writable = $templateItem && is_writable($templateItem['realpath']);
-if($one_flag == 'md'){
+if($one_flag === 'md'){
 	header('Content-type: text/plain; charset=UTF-8');
 	// 最初の行はwritableかどうか
 	echo $page_writable ? "WRITABLE\n" : "NOT_WRITABLE\n";
