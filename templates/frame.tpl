@@ -89,20 +89,6 @@
 						</form>
 					</div>
 
-					<!-- ナビゲーションリンク等 -->
-					<!--
-						<ul class="nav navbar-nav">
-						<li><a href="/all-topics/">/all</a></li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="#">Settings</a></li>
-								<li><a href="#">Logout</a></li>
-							</ul>
-						</li>
-						</ul>
-					-->
-
 					{if $GITHUB_ENABLED}
 					<ul class="nav navbar-nav pull-right">
 						{if $username == ''}
@@ -160,7 +146,7 @@
 		<!-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
 		<div class="clearfix" style="margin-top: 0px;">
 			<!-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
-			<!-- 本体 -->
+			<!-- 本体C -->
 			<!-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
 			<div id="page-content-wrapper">
 				<div>
