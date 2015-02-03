@@ -34,6 +34,10 @@ function loadText($templateItem)
 		}
 	}
 	if($text === false)$text = '';
+
+	// 加工
+	$text = str_replace('＜', '&lt;', $text);
+
 	return $text;
 }
 
