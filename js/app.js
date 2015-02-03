@@ -177,7 +177,7 @@ function RightController($scope, $location, $compile, $http){
 
 		// 内容取得
 		$scope.loadMarkdown();
-	}
+	};
 
 	// ロード
 	$scope.loadMarkdown = function(){

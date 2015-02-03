@@ -64,7 +64,28 @@
 							<!-- アイテム追加ボタン -->
 							{if isAdminUser() && isset($templateItem) && $templateItem['type'] === 'dir'}
 								<div style="margin-left: 20px; margin-top: 16px;" id="index-items-bottom">
-									<a class="btn btn-default">新規アイテム</a>
+									<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" id="new-item">
+										新規アイテム
+									</button>
+								</div>
+
+								<!-- Modal -->
+								<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header" style="border-bottom: none;">
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+												<h4 class="modal-title" id="myModalLabel">新規アイテム作成</h4>
+											</div>
+											<div style="margin: 0px 20px;">
+												<input type="text" class="form-control" id="new-item-name" name="new-item-name" value="" placeholder="新規アイテム名" />
+											</div>
+											<div class="modal-footer" style="border-top: none; padding-top: 0px;">
+												<button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+												<button type="button" class="btn btn-primary">作成</button>
+											</div>
+										</div>
+									</div>
 								</div>
 							{/if}
 						</div>
