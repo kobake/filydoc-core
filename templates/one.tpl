@@ -97,6 +97,11 @@
 									jQuery('#myModal').on('shown.bs.modal', function () {
 										jQuery('#new-item-name').focus();
 									});
+
+									// モーダル非表示時にテキストボックスをクリアする
+									jQuery('#myModal').on('hidden.bs.modal', function () {
+										jQuery('#new-item-name').val('');
+									});
 								</script>
 							{/if}
 						</div>
