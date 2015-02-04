@@ -36,12 +36,12 @@
 					</div>
 					{/if}
 
-					<div class="ng-non-bindable">
+					<div>
 						<div id="error-message" class="error-message">
 							Empty2
 						</div>
 
-						<div class="content-header">
+						<div class="content-header ng-non-bindable">
 							<h1>
 								{$metas['h1title']}
 							</h1>
@@ -60,11 +60,13 @@
 							<div class="toc-dummy">
 							</div>
 							<!-- 本体 -->
+							<div class="ng-non-bindable">
 							{$body nofilter}
+							</div>
 							<!-- アイテム追加ボタン -->
 							{if isAdminUser() && isset($templateItem) && $templateItem['type'] === 'dir'}
 								<div style="margin-left: 20px; margin-top: 16px;" id="index-items-bottom">
-									<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" id="new-item">
+									<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" id="new-item" ng-click="newItemButton();">
 										新規アイテム
 									</button>
 								</div>
@@ -82,11 +84,18 @@
 											</div>
 											<div class="modal-footer" style="border-top: none; padding-top: 0px;">
 												<button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
-												<button type="button" class="btn btn-primary">作成</button>
+												<button type="button" class="btn btn-primary" id="new-item-submit" ng-click="newItemSubmit();">作成</button>
 											</div>
 										</div>
 									</div>
 								</div>
+
+								<script>
+									// モーダル表示時にテキストボックスにフォーカスを移す
+									jQuery('#myModal').on('shown.bs.modal', function () {
+										jQuery('#new-item-name').focus();
+									});
+								</script>
 							{/if}
 						</div>
 						{* getSocialButtons() nofilter *}

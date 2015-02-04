@@ -162,6 +162,20 @@ function getWebPathForAjax($location, ext){
 	return ajaxpath;
 }
 
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// 新規アイテムフォーム
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+jQuery(function(){
+	/*
+	jQuery('body').on('#myModal', 'shown.bs.modal', function () {
+		console.log("aaa");
+		jQuery('#new-item-name').focus();
+	});
+	*/
+
+});
+
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // Right controller
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
@@ -177,6 +191,26 @@ function RightController($scope, $location, $compile, $http){
 
 		// 内容取得
 		$scope.loadMarkdown();
+	};
+
+	// 新規アイテムフォーム表示ボタン
+	$scope.newItemButton = function(){
+		// alert("hoge");
+		// ※data属性でモーダルフォーム表示しちゃうので、ここでやることは特にない
+		/*
+		setTimeout(function(){
+			jQuery('#new-item-name').focus();
+		}, 500);
+		setTimeout(function(){
+			jQuery('#new-item-name').focus();
+		}, 1000);
+		*/
+	};
+
+	// 新規アイテム情報送信
+	$scope.newItemSubmit = function(){
+		var name = jQuery('#new-item-name').val();
+		alert(name  + 'を作成します');
 	};
 
 	// ロード
