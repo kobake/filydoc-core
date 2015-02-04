@@ -180,6 +180,9 @@ jQuery(function(){
 // Right controller
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 function RightController($scope, $location, $compile, $http){
+	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+	// 編集機能
+	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 	// 編集開始
 	$scope.editBegin = function() {
 		console.log("editBegin.");
@@ -193,6 +196,60 @@ function RightController($scope, $location, $compile, $http){
 		$scope.loadMarkdown();
 	};
 
+	// 編集確定
+	$scope.editSave = function(){
+		console.log("editSave.");
+
+		// エラーメッセージは一度隠す
+		$('#error-message').hide();
+
+		// AJAXでPUT送る
+		var ajaxpath = getWebPathForAjax($location, 'md');
+		var data = {
+			markdown: $('#edit-textarea').val()
+		};
+		console.log("Put content to " + ajaxpath);
+		$http.put(ajaxpath, data)
+			.error(function (data, status, headers, config) {
+				$('#error-message').text("ajax put error");
+				$('#error-message').show();
+			})
+			.success(function (data, status, headers, config) {
+				if(data.result === 'SUCCESS'){
+					// リロード
+					$scope.loadContent();
+					// $('#error-message').text("OK");
+					// $('#error-message').show();
+				}
+				else{
+					$('#error-message').text("Error: " + data.error);
+					$('#error-message').show();
+				}
+				console.log(data);
+				console.log(status);
+				console.log(headers());
+				//$('#edit-textarea').val(data);
+			});
+	};
+
+	// 編集キャンセル
+	$scope.editCancel = function(){
+		console.log("editCancel.");
+		// Writableエラーは隠す
+		$('#error-message-writable').hide();
+
+		// 元のHTMLに戻す
+		var content = jQuery('.page-content');
+		content.html($scope.original_html);
+		delete($scope.original_html);
+
+		// フッタ
+		window.footerFixed();
+	};
+
+	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+	// 新規アイテム
+	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 	// 新規アイテムフォーム表示ボタン
 	$scope.newItemButton = function(){
 		// alert("hoge");
@@ -210,9 +267,73 @@ function RightController($scope, $location, $compile, $http){
 	// 新規アイテム情報送信
 	$scope.newItemSubmit = function(){
 		var name = jQuery('#new-item-name').val();
-		alert(name  + 'を作成します');
+
+		// バリデーション
+		name = name.trim();
+		if(name === ''){
+			// エラーメッセージ表示
+			$('#dlg-error-message').show();
+			setTimeout(function(){
+				$('#dlg-error-message').jrumble({x:3,y:0,rotation:0,speed:30});
+				$('#dlg-error-message').trigger('startRumble');
+				setTimeout(function(){
+					$('#dlg-error-message').trigger('stopRumble');
+				}, 500);
+			});
+			return;
+		}
+		// 確認
+		if(!confirm(name  + 'を作成します。よろしいですか？'))return;
+		// 通信
+
+		// エラーメッセージは一度隠す
+		$('#error-message').hide();
+
+		// 親の.mdパス
+		var parentAjaxpath = getWebPathForAjax($location, 'md');
+		console.log(parentAjaxpath);
+
+		// 自分の.mdパス
+		var pathdir = function(path){
+			return path.replace(/\/[^\/]+$/, '');
+		};
+		var ajaxpath = pathdir(parentAjaxpath) + '/' + name + '.md';
+		console.log(ajaxpath);
+
+		// AJAXでPUT送る
+		return;
+		var data = {
+			markdown: $('#edit-textarea').val()
+		};
+		console.log("Put content to " + ajaxpath);
+		$http.put(ajaxpath, data)
+			.error(function (data, status, headers, config) {
+				$('#error-message').text("ajax put error");
+				$('#error-message').show();
+			})
+			.success(function (data, status, headers, config) {
+				if(data.result === 'SUCCESS'){
+					// リロード
+					$scope.loadContent();
+					// $('#error-message').text("OK");
+					// $('#error-message').show();
+				}
+				else{
+					$('#error-message').text("Error: " + data.error);
+					$('#error-message').show();
+				}
+				console.log(data);
+				console.log(status);
+				console.log(headers());
+				//$('#edit-textarea').val(data);
+			});
+
+
 	};
 
+	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+	// ロード部分
+	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 	// ロード
 	$scope.loadMarkdown = function(){
 		// 一旦エラーメッセージは隠す
@@ -267,56 +388,7 @@ function RightController($scope, $location, $compile, $http){
 			});
 	};
 
-	// 編集確定
-	$scope.editSave = function(){
-		console.log("editSave.");
 
-		// エラーメッセージは一度隠す
-		$('#error-message').hide();
-
-		// AJAXでPUT送る
-		var ajaxpath = getWebPathForAjax($location, 'md');
-		var data = {
-			markdown: $('#edit-textarea').val()
-		};
-		console.log("Put content to " + ajaxpath);
-		$http.put(ajaxpath, data)
-			.error(function (data, status, headers, config) {
-				$('#error-message').text("ajax put error");
-				$('#error-message').show();
-			})
-			.success(function (data, status, headers, config) {
-				if(data.result === 'SUCCESS'){
-					// リロード
-					$scope.loadContent();
-					// $('#error-message').text("OK");
-					// $('#error-message').show();
-				}
-				else{
-					$('#error-message').text("Error: " + data.error);
-					$('#error-message').show();
-				}
-				console.log(data);
-				console.log(status);
-				console.log(headers());
-				//$('#edit-textarea').val(data);
-			});
-	};
-
-	// 編集キャンセル
-	$scope.editCancel = function(){
-		console.log("editCancel.");
-		// Writableエラーは隠す
-		$('#error-message-writable').hide();
-
-		// 元のHTMLに戻す
-		var content = jQuery('.page-content');
-		content.html($scope.original_html);
-		delete($scope.original_html);
-
-		// フッタ
-		window.footerFixed();
-	};
 }
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //

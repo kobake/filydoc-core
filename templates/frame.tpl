@@ -206,6 +206,7 @@
 	<script src="{getWebCoreDir()}/libs/angularjs/angular-resource.js"></script>
 	<script src="{getWebCoreDir()}/libs/angularjs/angular-route.js"></script>
 	<script src="{getWebCoreDir()}/libs/footerFixed.js"></script>
+	<script src="{getWebCoreDir()}/js/jquery.jrumble.1.3/jquery.jrumble.1.3.js"></script>
 	<script src="{getWebCoreDir()}/js/tree.js"></script>
 	<script src="{getWebCoreDir()}/js/app.js"></script>
 	<script src="{getWebCoreDir()}/js/other.js"></script>
