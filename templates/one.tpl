@@ -75,6 +75,7 @@
 								<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 									<div class="modal-dialog">
 										<div class="modal-content">
+											<form>
 											<div class="modal-header" style="border-bottom: none;">
 												<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 												<h4 class="modal-title" id="myModalLabel">新規アイテム作成</h4>
@@ -84,8 +85,9 @@
 											</div>
 											<div class="modal-footer" style="border-top: none; padding-top: 0px;">
 												<button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
-												<button type="button" class="btn btn-primary" id="new-item-submit" ng-click="newItemSubmit();">作成</button>
+												<button type="submit" class="btn btn-primary" id="new-item-submit" ng-click="newItemSubmit();">作成</button>
 											</div>
+											</form>
 										</div>
 									</div>
 								</div>
