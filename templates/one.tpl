@@ -23,6 +23,7 @@
 		<div id="page-content-wrapper"><div><div id="right-wrapper">
 			<section id="content-section">
 				<div ng-controller="RightController">
+					<form ng-submit="editSave();">
 					{if isAdminUser()}
 					<div class="page-control clearfix">
 						<a href="#" ng-click="editBegin();" id="page-edit">
@@ -46,6 +47,7 @@
 								{$metas['h1title']}
 							</h1>
 							<div id="edit-path-wrapper" style="position: absolute; left: 0px; top: 0px; width: 100%; padding-left: 4px; padding-right: 35px;">
+								<input type="hidden" name="original-path" id="original-path" value="{$metas['h1titleEdit']}" />
 								<input type="text" name="edit-path" id="edit-path" value="{$metas['h1titleEdit']}" style="margin-left: 16px; width: 100%; line-height: 20pt; font-size: 12pt; padding-left: 4px; padding-right: 4px;" />
 							</div>
 						</div>
@@ -74,29 +76,6 @@
 									</button>
 								</div>
 
-								<!-- Modal -->
-								<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-									<div class="modal-dialog">
-										<div class="modal-content">
-											<form>
-												<div class="modal-header" style="border-bottom: none;">
-													<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-													<h4 class="modal-title" id="myModalLabel">新規アイテム作成</h4>
-												</div>
-												<div style="display: none; margin-bottom: 8px; color: #d66; margin-left: 20px;" id="dlg-error-message">
-													アイテム名を入力してください。
-												</div>
-												<div style="margin: 0px 20px;">
-													<input type="text" class="form-control" id="new-item-name" name="new-item-name" value="" placeholder="新規アイテム名" />
-												</div>
-												<div class="modal-footer" style="border-top: none; padding-top: 0px;">
-													<button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
-													<button type="submit" class="btn btn-primary" id="new-item-submit" ng-click="newItemSubmit();">作成</button>
-												</div>
-											</form>
-										</div>
-									</div>
-								</div>
 
 								<script>
 									// モーダル表示時にテキストボックスにフォーカスを移す
@@ -115,10 +94,36 @@
 						{* getSocialButtons() nofilter *}
 						{getPageFoot()}
 					</div>
+					</form>
 				</div>
 			</section>
 		</div></div></div>
 	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form>
+					<div class="modal-header" style="border-bottom: none;">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">新規アイテム作成</h4>
+					</div>
+					<div style="display: none; margin-bottom: 8px; color: #d66; margin-left: 20px;" id="dlg-error-message">
+						アイテム名を入力してください。
+					</div>
+					<div style="margin: 0px 20px;">
+						<input type="text" class="form-control" id="new-item-name" name="new-item-name" value="" placeholder="新規アイテム名" />
+					</div>
+					<div class="modal-footer" style="border-top: none; padding-top: 0px;">
+						<button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+						<button type="submit" class="btn btn-primary" id="new-item-submit" ng-click="newItemSubmit();">作成</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 	<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/1.7.0/less.min.js"></script>
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>

@@ -67,14 +67,7 @@ $(function () {
 		//persist: "cookie"
 		//cookieId: "treeview-black"
 	});
-	// fourth example
-	/*
-	$("#black, #gray").treeview({
-		control: "#treecontrol",
-		persist: "cookie",
-		cookieId: "treeview-black"
-	});
-	*/
+
 	// 基本は全閉じ
 	//$('#tree-box ul').hide();
 
@@ -145,18 +138,6 @@ $(function () {
 				}
 			}
 			filtering(window.g_top);
-			/*
-			$('.treeview li').each(function () {
-				var li = $(this);
-				if (li.text().toLowerCase().indexOf(filter) >= 0) {
-					li.show();
-					expandLiParents(li);
-				}
-				else {
-					li.hide();
-				}
-			});
-			*/
 		}
 	});
 });

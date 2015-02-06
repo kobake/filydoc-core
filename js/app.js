@@ -1,3 +1,12 @@
+// Ctrl-Enter で submit 押下扱いにする
+jQuery(function(){
+	jQuery('body').on('keydown', 'textarea', function (e) {
+		if (e.ctrlKey && e.keyCode == 13) {
+			jQuery(this).parents('form').submit();
+		}
+	});
+});
+
 // TOC構築
 function generateToc($compile, $scope){
 	console.log("TOC");
@@ -206,6 +215,8 @@ function RightController($scope, $location, $compile, $http){
 		// AJAXでPUT送る
 		var ajaxpath = getWebPathForAjax($location, 'md');
 		var data = {
+			originalPath: $('#original-path').val(),
+			editPath: $('#edit-path').val(),
 			markdown: $('#edit-textarea').val()
 		};
 		console.log("Put content to " + ajaxpath);
@@ -371,7 +382,7 @@ function RightController($scope, $location, $compile, $http){
 				var frame = jQuery('<div style="margin-left: -40px;"></div>');
 				frame.append(jQuery('<div><textarea id="edit-textarea" style="width:100%; height: 300px;"></textarea></div>'));
 				var bottom = jQuery('<div style="margin-top: 2px;"></div>');
-				bottom.append(jQuery('<button class="btn btn-default" ng-click="editSave();" style="width: 100px; margin-right: 8px;">Save</button>'));
+				bottom.append(jQuery('<input type="submit" value="Save" class="btn btn-default" style="width: 100px; margin-right: 8px;">'));
 				bottom.append(jQuery('<button class="btn btn-default" ng-click="editCancel();" style="width: 100px;">Cancel</button>'));
 				frame.append(bottom);
 
@@ -442,8 +453,10 @@ app.controller('PageController', function ($scope, $http, $location, $compile, $
 				// コンテンツ更新
 				//$('#content-section').replaceWith($(data).find('#content-section'));
 				var html = $(data).find('#content-section').html();
+
 				// html = "<div ng-non-bindable>" + html + "</div>"; // コンテンツ内の {{～}} をコンパイルしないようにする。
 				$('#content-section').html($compile(html)($scope));
+				$('#content-section').removeClass('edit-mode');
 
 				// 目次
 				generateToc($compile, $scope);

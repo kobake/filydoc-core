@@ -382,6 +382,7 @@ if($search_flag){
 }
 else if($login_flag){
 	$defaults['headtitle'] = 'Login';
+	$defaults['h1title'] = '';
 	$defaults['h1titleEdit'] = '';
 }
 else{
