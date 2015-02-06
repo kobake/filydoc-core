@@ -243,6 +243,9 @@ function RightController($scope, $location, $compile, $http){
 		content.html($scope.original_html);
 		delete($scope.original_html);
 
+		// 元のモードに戻す
+		$('.edit-mode').removeClass('edit-mode');
+
 		// フッタ
 		window.footerFixed();
 	};
@@ -375,13 +378,16 @@ function RightController($scope, $location, $compile, $http){
 				// コンパイル
 				var html = $compile(frame[0].outerHTML)($scope);
 
-				// 差し替え
+				// 本文部分差し替え
 				var content = jQuery('.page-content');
 				$scope.original_html = content.html();
 				content.html(html);
 
 				// 中身
 				$('#edit-textarea').val(text);
+
+				// 編集モード見た目
+				$('#content-section').addClass('edit-mode');
 
 				// フッタ
 				window.footerFixed();

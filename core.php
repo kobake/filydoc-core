@@ -378,15 +378,17 @@ $defaults['description'] = '';
 if($search_flag){
 	$defaults['headtitle'] = 'SearchResult: ' . $query['q'] . ' - ' . getSiteName();
 	$defaults['h1title'] = 'SearchResult: ' . $query['q'];
+	$defaults['h1titleEdit'] = '';
 }
 else if($login_flag){
 	$defaults['headtitle'] = 'Login';
-	$defaults['h1title'] = 'Login';
+	$defaults['h1titleEdit'] = '';
 }
 else{
 	$title_items = getTitleItems();
 	$defaults['headtitle'] = getHeadTitle($title_items);
 	$defaults['h1title'] = getH1Title($title_items);
+	$defaults['h1titleEdit'] = getH1TitleEdit($title_items);
 }
 foreach($defaults as $key => $value){
 	if(!isset($metas[$key])){

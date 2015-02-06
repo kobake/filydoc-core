@@ -594,3 +594,21 @@ blockquote{
 	font-family: 'ＭＳ ゴシック';
 	letter-spacing: 0.1em;
 }
+
+// 非編集モード
+.content-header h1{
+	display: block;
+}
+.content-header #edit-path-wrapper{
+	display: none;
+}
+
+// 編集モード
+.edit-mode{
+	.content-header h1{
+		display: none;
+	}
+	.content-header #edit-path-wrapper{
+		display: block;
+	}
+}

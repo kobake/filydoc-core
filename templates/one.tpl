@@ -41,10 +41,13 @@
 							Empty2
 						</div>
 
-						<div class="content-header ng-non-bindable">
+						<div class="content-header ng-non-bindable" style="position: relative;">
 							<h1>
 								{$metas['h1title']}
 							</h1>
+							<div id="edit-path-wrapper" style="position: absolute; left: 0px; top: 0px; width: 100%; padding-left: 4px; padding-right: 35px;">
+								<input type="text" name="edit-path" id="edit-path" value="{$metas['h1titleEdit']}" style="margin-left: 16px; width: 100%; line-height: 20pt; font-size: 12pt; padding-left: 4px; padding-right: 4px;" />
+							</div>
 						</div>
 						<div class="page-content inset">
 							<!-- 内部目次 -->

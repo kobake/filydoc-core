@@ -424,3 +424,15 @@ blockquote {
   font-family: 'ＭＳ ゴシック';
   letter-spacing: 0.1em;
 }
+.content-header h1 {
+  display: block;
+}
+.content-header #edit-path-wrapper {
+  display: none;
+}
+.edit-mode .content-header h1 {
+  display: none;
+}
+.edit-mode .content-header #edit-path-wrapper {
+  display: block;
+}
