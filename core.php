@@ -182,12 +182,28 @@ if(php_sapi_name() === 'cli') {
 	exit(0);
 }
 
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// セッション管理
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+function my_session_start(){
+	// セッション時間
+	// 10分 = 10 * 60sec
+	// 1日 = 24h = 24 * 60min = 24 * 60 * 60sec
+	// 1week = 7 * 24 * 60 * 60sec
+	$lifetime = 7 * 24 * 60 * 60; // 1week
+	session_set_cookie_params($lifetime);
+
+	// セッション開始
+	session_start();
+}
+
+
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // HTTPリクエスト解釈
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // セッション開始
-session_start();
+my_session_start();
 
 // 単一ページ表示かどうかを判定 (.html)
 // REQUEST_URI  … /memo/search.html?q=hoge
@@ -233,6 +249,7 @@ if($uri_without_query == getWebRootDir() . '/logout') {
 	// セッションを破棄し、
 	$_SESSION = array();
 	session_destroy();
+
 	// リダイレクト
 	$url = getWebRootDir();
 	header("Location: {$url}/");
@@ -245,10 +262,12 @@ if(GitHubSettings::ENABLED) {
 		// 一旦セッションは破棄
 		$_SESSION = array();
 		session_destroy();
-		session_start(); // 再開
+		my_session_start(); // 再開
+
 		// OAuth2.0認証
 		$github = new GitHub();
 		$username = $github->signup();
+
 		// ユーザ名が取得できたら、セッションに保存してリダイレクト
 		$_SESSION['github_username'] = $username;
 		$url = getWebRootDir();
