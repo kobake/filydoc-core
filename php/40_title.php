@@ -59,6 +59,7 @@ function getH1Title($items)
 }
 function getH1TitleEdit($items)
 {
+	if(!isset($items[count($items) - 1]['realpath']))return '';
 	$realpath = $items[count($items) - 1]['realpath'];                              // "/home/sites/memo.clock-up.jp/public_html/data/security_セキュリティ/csrf_クロスサイトリクエストフォージェリ.md"
 	$path = preg_replace('/^' . preg_quote(DATA_ROOT, '/') . '\//', '', $realpath); // "security_セキュリティ/csrf_クロスサイトリクエストフォージェリ.md"
 	return $path;
