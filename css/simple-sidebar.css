@@ -3,6 +3,29 @@
   transition: all 0.4s ease 0s;
   padding-left: 0px;
 }
+@media print {
+  #wrapper {
+    padding-left: 0px ! important;
+  }
+  #page-content-wrapper {
+    margin-left: 0px ! important;
+  }
+  #page-content-wrapper > * {
+    margin-left: 0px ! important;
+  }
+  #sidebar-wrapper-out {
+    display: none ! important;
+  }
+  #content-section {
+    padding-left: 0px ! important;
+  }
+  h2 {
+    margin-left: 0px ! important;
+  }
+  .toc {
+    margin-left: 0px ! important;
+  }
+}
 #sidebar-wrapper-out {
   position: fixed;
   top: 51px;
@@ -418,7 +441,7 @@ html,body{
 }
 pre code {
   font-family: 'ＭＳ ゴシック';
-  letter-spacing: 0.1em;
+  letter-spacing: 0;
 }
 blockquote {
   font-family: 'ＭＳ ゴシック';

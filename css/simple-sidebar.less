@@ -4,11 +4,36 @@
 @nav_height: 51px; // 57px
 @nav_height8: 60px; // +8px
 @tree_bg: #fff;
+@gap: 40px;
 
 #wrapper {
 	padding-left: @width_power;
 	transition: all 0.4s ease 0s;
 	padding-left: 0px;
+}
+
+@media print{
+	#wrapper {
+		padding-left: 0px ! important;
+	}
+	#page-content-wrapper {
+		margin-left: 0px ! important;
+	}
+	#page-content-wrapper > *{
+		margin-left: 0px ! important;
+	}
+	#sidebar-wrapper-out {
+		display:none ! important;
+	}
+	#content-section{
+		padding-left: 0px ! important;
+	}
+	h2{
+		margin-left: 0px ! important;
+	}
+	.toc{
+		margin-left: 0px ! important;
+	}
 }
 
 #sidebar-wrapper-out {
@@ -64,8 +89,6 @@
 #page-content-wrapper > *{
 	margin-left: @width_power;
 }
-
-@gap: 40px;
 
 .inset {
 	padding: 20px;
@@ -448,7 +471,7 @@ div.page-control{
 	border: 1px solid #CCC;
 	background-color: #f8f8ff;
 	padding-top: 8px;
-	margin-left: -40px;
+	margin-left: -@gap;
 	display: inline-block;
 	min-width: 200px;
 	max-width: 800px;
@@ -586,7 +609,8 @@ html,body{
 // コード部のフォント
 pre code{
 	font-family: 'ＭＳ ゴシック';
-	letter-spacing: 0.1em;
+	letter-spacing: 0;
+
 }
 
 // 引用部
