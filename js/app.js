@@ -194,8 +194,6 @@ function RightController($scope, $location, $compile, $http){
 	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 	// 編集開始
 	$scope.editBegin = function() {
-		console.log("editBegin.");
-
 		// 既に編集モードなら何もしない
 		if (jQuery('#edit-textarea').size() >= 1) {
 			return;
@@ -207,8 +205,6 @@ function RightController($scope, $location, $compile, $http){
 
 	// 編集確定
 	$scope.editSave = function(){
-		console.log("editSave.");
-
 		// エラーメッセージは一度隠す
 		$('#error-message').hide();
 
@@ -400,12 +396,36 @@ function RightController($scope, $location, $compile, $http){
 				// 編集モード見た目
 				$('#content-section').addClass('edit-mode');
 
+				// フォーカス
+				setCaretToPos($('#edit-textarea')[0], 0);
+				$('#edit-textarea')[0].scrollTop = 0;
+
 				// フッタ
 				window.footerFixed();
 			});
 	};
 
 
+}
+
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+// キャレット位置設定
+// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
+function setSelectionRange(input, selectionStart, selectionEnd) {
+	if (input.setSelectionRange) {
+		input.focus();
+		input.setSelectionRange(selectionStart, selectionEnd);
+	}
+	else if (input.createTextRange) {
+		var range = input.createTextRange();
+		range.collapse(true);
+		range.moveEnd('character', selectionEnd);
+		range.moveStart('character', selectionStart);
+		range.select();
+	}
+}
+function setCaretToPos (input, pos) {
+	setSelectionRange(input, pos, pos);
 }
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
