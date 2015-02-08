@@ -306,6 +306,23 @@ else{
 	$text = loadText($templateItem);
 }
 
+// INPUT:  security_セキュリティ/csrf_クロスサイトリクエストフォージェリ.md
+// OUTPUT: /security/csrf
+function Path2Url($path){
+	$ret = $path;                                       // security_セキュリティ/csrf_クロスサイトリクエストフォージェリ.md
+	// 拡張子除去
+	$ret = preg_replace('/\.[A-Za-z0-9]+$/', '', $ret); // security_セキュリティ/csrf_クロスサイトリクエストフォージェリ
+	// 一旦分割
+	$tmp = explode('/', $ret);                          // security_セキュリティ, csrf_クロスサイトリクエストフォージェリ
+	// 構築し直し
+	$ret = '';
+	foreach($tmp as $item){
+		$e = explode('_', $item)[0]; // security_セキュリティ -> security
+		$ret .= '/' . $e;
+	}
+	// 結果
+	return $ret; // /security/csrf
+}
 
 // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 // PUTを受け取る場合
@@ -333,9 +350,11 @@ if($templateItem && $one_flag === 'md' && $_SERVER['REQUEST_METHOD'] === 'PUT') 
 
 	// 保存
 	try{
-		saveText($templateItem, $data['markdown']);
+		saveText($templateItem, $data['markdown'], $data['originalPath'], $data['editPath']);
+		$url = Path2Url($data['editPath']);
 		$result = array(
-			'result' => 'SUCCESS'
+			'result' => 'SUCCESS',
+			'redirect' => $url // URLが変わる場合はここに新しいURLが来るようにする
 		);
 	}
 	catch(Exception $ex){

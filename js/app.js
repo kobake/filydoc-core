@@ -224,9 +224,14 @@ function RightController($scope, $location, $compile, $http){
 			.success(function (data, status, headers, config) {
 				if(data.result === 'SUCCESS'){
 					// リロード
-					$scope.loadContent();
-					// $('#error-message').text("OK");
-					// $('#error-message').show();
+					if(location.pathname === data.redirect){
+						console.log("AAA");
+						$scope.loadContent();
+					}
+					else{
+						console.log("BBB");
+						location.href = data.redirect;
+					}
 				}
 				else{
 					$('#error-message').text("Error: " + data.error);

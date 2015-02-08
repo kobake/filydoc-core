@@ -48,39 +48,30 @@ EOS;
 /* セーブ
  *
  * @param Array  $templateItem
- * @param Int/Boolean The number of bytes that were written to the file, or FALSE on failure.
+ * @param String $text
+ * @param String $originalPath
+ * @param String $editPath
+ *
+ * @return Int/Boolean The number of bytes that were written to the file, or FALSE on failure.
  */
-function saveText($templateItem, $text)
+function saveText($templateItem, $text, $originalPath, $editPath)
 {
-	// これだとエラー原因が分からないので、生ファイルアクセスを試みる
-	/*
-	retrun @file_put_contents($templateItem['realpath'], $text);
-	$ret = @file_put_contents($templateItem['realpath'], $text);
-	if($ret === false){
-		global $php_errormsg;
-		print("Error: $php_errormsg\n");
-	}
-	return $ret;
-	*/
-
+	// ファイル内容保存
 	ini_set('track_errors', '1');
 	$ret = @file_put_contents($templateItem['realpath'], $text);
 	ini_set('track_errors', '0');
 	if($ret === false){
 		throw new Exception("$php_errormsg");
 	}
-	return $ret;
 
-
-	/*
-	ini_set('track_errors', '1');
-	$fp = @fopen($templateItem['realpath'], 'w');
-	ini_set('track_errors', '0');
-	if(!$fp){
-		throw new Exception("fopen failure: $php_errormsg");
+	// Path変更
+	if($originalPath !== $editPath){
+		// 名前変更
+		$originalFullPath = DATA_ROOT . '/' . $originalPath;
+		$editFullPath = DATA_ROOT . '/' . $editPath;
+		rename($originalFullPath, $editFullPath);
 	}
-	fwrite($fp, $text);
-	fclose($fp);
-	return true;
-	*/
+
+	// Path適用
+	return $ret;
 }
