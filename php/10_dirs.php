@@ -126,15 +126,14 @@ function get_dirs()
 	}
 	else{
 		// キャッシュがオリジナルより古い（小さい）場合、強制再構築。※キャッシュは少なくともオリジナルより3秒以上新しい必要がある。
-		// $start = microtime(true);
 		$found = findNewerFile(DATA_ROOT, $t_cache - 4); // (キャッシュ更新日時-4秒)より新しい(タイムスタンプが大きい)ファイルを探す
-		// $end = microtime(true);
-		// $t = $end - $start;
 		if($found){
 			$force_restruct = true;
 		}
-		// var_dump($force_restruct);exit(0);
 	}
+
+	// ※#### デバッグ用 DEBUG用
+	// $force_restruct = true;
 	
 	// キャッシュロード
 	if($force_restruct){
@@ -157,8 +156,10 @@ function get_dirs()
 	if($all === false){
 		// $dirs構築
 		$dirs = _get_dirs(DATA_ROOT, '');
+
 		// 重複削除
-		_cut_duplicated_items(null, $dirs);
+		// _cut_duplicated_items(null, $dirs);
+
 		// ハッシュ構築 -> $g_realpath2item, $g_webpath2item
 		$g_realpath2item = array();
 		$g_webpath2item = array();
@@ -210,7 +211,8 @@ function loadKeywords(&$item, $additionalKeywordsString)
 {
 	// 自分のコンテンツをロード (metasのため)
 	// $item['body'] = explode("\n", file_get_contents($item['realpath']))[0];
-	$body = file_get_contents($item['realpath']);
+	$body = @file_get_contents($item['realpath']);
+	if($body === false)$body = '';
 	$metas = readMetas($body);
 	if(!isset($metas['keywords']))$metas['keywords'] = '';
 	// 自分のキーワード
