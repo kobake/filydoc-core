@@ -48,6 +48,7 @@
 							</h1>
 							<div id="edit-path-wrapper" style="position: absolute; left: 0px; top: 0px; width: 100%; padding-left: 4px; padding-right: 35px;">
 								<input type="hidden" name="original-path" id="original-path" value="{$metas['h1titleEdit']}" />
+								<input type="hidden" name="edit-type" id="edit-type" value="normal" />
 								<input type="text" name="edit-path" id="edit-path" value="{$metas['h1titleEdit']}" style="margin-left: 16px; width: 100%; line-height: 20pt; font-size: 12pt; padding-left: 4px; padding-right: 4px;" />
 							</div>
 						</div>

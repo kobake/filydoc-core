@@ -56,23 +56,30 @@ function rename_ex($oldname, $newname){
  *
  * @param Array  $templateItem
  * @param String $text
+ * @param String $editType
  * @param String $originalPath
  * @param String $editPath
  *
  * @return Int/Boolean The number of bytes that were written to the file, or FALSE on failure.
  */
-function saveText($templateItem, $text, $originalPath, $editPath)
+function saveText($templateItem, $text, $editType, $originalPath, $editPath)
 {
 	// ファイル内容保存
+	if($editType === 'new'){
+		$savePath = DATA_ROOT . '/' . $editPath;
+	}
+	else{
+		$savePath = $templateItem['realpath'];
+	}
 	ini_set('track_errors', '1');
-	$ret = @file_put_contents($templateItem['realpath'], $text);
+	$ret = @file_put_contents($savePath, $text);
 	ini_set('track_errors', '0');
 	if($ret === false){
 		throw new Exception("$php_errormsg");
 	}
 
 	// Path変更
-	if($originalPath !== $editPath){
+	if($originalPath !== $editPath && $editType !== 'new'){
 		// 名前変更
 		$originalFullPath = DATA_ROOT . '/' . $originalPath;
 		$editFullPath = DATA_ROOT . '/' . $editPath;

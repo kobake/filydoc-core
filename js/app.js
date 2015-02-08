@@ -213,6 +213,7 @@ function RightController($scope, $location, $compile, $http){
 		var data = {
 			originalPath: $('#original-path').val(),
 			editPath: $('#edit-path').val(),
+			editType: $('#edit-type').val(),
 			markdown: $('#edit-textarea').val()
 		};
 		console.log("Put content to " + ajaxpath);
@@ -311,7 +312,37 @@ function RightController($scope, $location, $compile, $http){
 		var dirPath = $('#original-path').val();
 
 		// ファイルPath
-		$('#edit-path').val(dirPath + '/新規アイテム.md');
+		var generateNewPath = function(dirPath){
+			// 現在の全realpathを収集
+			window.realPaths = {};
+			var scan = function(item){
+				window.realPaths[item.realpath] = 1;
+				if(item.children){
+					item.children.forEach(function(child){
+						scan(child);
+					});
+				}
+			};
+			window.menus.forEach(function(item){
+				scan(item);
+			});
+
+			// 最大100個まで試行する
+			for(var i = 1; i <= 100; i++){
+				var path = dirPath + '/' + '新規アイテム' + (i === 1 ? '' : i) + '.md';
+				if(!window.realPaths[window.data_root + '/' + path]){
+					return path;
+				}
+				else{
+					continue;
+				}
+			}
+			return dirPath + '/' + '新規アイテムA.md';
+		};
+		$('#edit-path').val(generateNewPath(dirPath));
+
+		// タイプ
+		$('#edit-type').val('new');
 
 		// フッタ
 		window.footerFixed();

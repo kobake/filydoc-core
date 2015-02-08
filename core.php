@@ -369,7 +369,7 @@ if($templateItem && $one_flag === 'md' && $_SERVER['REQUEST_METHOD'] === 'PUT') 
 
 	// 保存
 	try{
-		saveText($templateItem, $data['markdown'], $data['originalPath'], $data['editPath']);
+		saveText($templateItem, $data['markdown'], $data['editType'], $data['originalPath'], $data['editPath']);
 		$url = Path2Url($data['editPath']);
 		$result = array(
 			'result' => 'SUCCESS',
@@ -618,6 +618,7 @@ if(!$one_flag){
 	// $smarty->assign('breadcrumb_html', $breadcrumb_html);
 	$smarty->assign('items_html', $items_html);
 	$smarty->assign('dirs_json', json_encode($dirs));
+	$smarty->assign('DATA_ROOT', json_encode(DATA_ROOT));
 	$smarty->display(APP_ROOT . '/templates/frame.tpl');
 }
 else if($one_flag === 'html'){

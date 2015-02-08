@@ -58,6 +58,7 @@
 		<!-- JS解釈 -->
 		<!-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
 		<script>
+			window.data_root = {$DATA_ROOT nofilter};
 			window.menus = {$dirs_json nofilter};
 		</script>
 		<!-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
