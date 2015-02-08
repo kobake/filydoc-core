@@ -45,6 +45,13 @@ EOS;
 	return $text;
 }
 
+// 拡張リネーム
+// ※ディレクトリが存在しない場合にはディレクトリも自動生成
+function rename_ex($oldname, $newname){
+	mkdir(dirname($newname), 0777, TRUE);
+	rename($oldname, $newname);
+}
+
 /* セーブ
  *
  * @param Array  $templateItem
@@ -69,7 +76,7 @@ function saveText($templateItem, $text, $originalPath, $editPath)
 		// 名前変更
 		$originalFullPath = DATA_ROOT . '/' . $originalPath;
 		$editFullPath = DATA_ROOT . '/' . $editPath;
-		rename($originalFullPath, $editFullPath);
+		rename_ex($originalFullPath, $editFullPath);
 	}
 
 	// Path適用
