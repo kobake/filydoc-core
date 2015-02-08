@@ -246,13 +246,13 @@ function RightController($scope, $location, $compile, $http){
 
 	// 編集キャンセル
 	$scope.editCancel = function(){
-		console.log("editCancel.");
 		// Writableエラーは隠す
 		$('#error-message-writable').hide();
 
 		// 元のHTMLに戻す
 		var content = jQuery('.page-content');
-		content.html($scope.original_html);
+		var html = $compile($scope.original_html)($scope);
+		content.html(html);
 		delete($scope.original_html);
 
 		// 元のモードに戻す
@@ -266,17 +266,55 @@ function RightController($scope, $location, $compile, $http){
 	// 新規アイテム
 	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- //
 	// 新規アイテムフォーム表示ボタン
+	// ※編集開始と同じようなことをすれば良い
 	$scope.newItemButton = function(){
-		// alert("hoge");
-		// ※data属性でモーダルフォーム表示しちゃうので、ここでやることは特にない
-		/*
-		setTimeout(function(){
-			jQuery('#new-item-name').focus();
-		}, 500);
-		setTimeout(function(){
-			jQuery('#new-item-name').focus();
-		}, 1000);
-		*/
+		// 既に編集モードなら何もしない
+		if (jQuery('#edit-textarea').size() >= 1) {
+			return;
+		}
+
+		// 一旦エラーメッセージは隠す
+		$('#error-message').hide();
+		$('#error-message-writable').hide();
+
+		// 編集領域の部品を作る
+		var frame = jQuery('<div style="margin-left: -40px;"></div>');
+		frame.append(jQuery('<div><textarea id="edit-textarea" style="width:100%; height: 300px;"></textarea></div>'));
+		var bottom = jQuery('<div style="margin-top: 2px;"></div>');
+		bottom.append(jQuery('<input type="submit" value="Save" class="btn btn-default" style="width: 100px; margin-right: 8px;">'));
+		bottom.append(jQuery('<button class="btn btn-default" ng-click="editCancel();" style="width: 100px;">Cancel</button>'));
+		frame.append(bottom);
+
+		// コンパイル
+		var html = $compile(frame[0].outerHTML)($scope);
+
+		// 本文部分差し替え
+		var content = jQuery('.page-content');
+		$scope.original_html = content.html();
+		content.html(html);
+
+		// 中身
+		$('#edit-textarea').val(
+			"## 見出し\n" +
+			"内容\n"
+		);
+
+		// 編集モード見た目
+		$('#content-section').addClass('edit-mode');
+
+		// フォーカス
+		$('#edit-textarea').focus();
+		// setCaretToPos($('#edit-textarea')[0], 0);
+		// $('#edit-textarea')[0].scrollTop = 0;
+
+		// ディレクトリPath
+		var dirPath = $('#original-path').val();
+
+		// ファイルPath
+		$('#edit-path').val(dirPath + '/新規アイテム.md');
+
+		// フッタ
+		window.footerFixed();
 	};
 
 	// 新規アイテム情報送信
