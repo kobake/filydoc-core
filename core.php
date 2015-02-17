@@ -328,16 +328,25 @@ else{
 // INPUT:  security_セキュリティ/csrf_クロスサイトリクエストフォージェリ.md
 // OUTPUT: /security/csrf
 function Path2Url($path){
-	$ret = $path;                                       // security_セキュリティ/csrf_クロスサイトリクエストフォージェリ.md
+	$ret = $path;                                       // 01_security_セキュリティ/05_csrf_クロスサイトリクエストフォージェリ.md
 	// 拡張子除去
-	$ret = preg_replace('/\.[A-Za-z0-9]+$/', '', $ret); // security_セキュリティ/csrf_クロスサイトリクエストフォージェリ
+	$ret = preg_replace('/\.[A-Za-z0-9]+$/', '', $ret); // 01_security_セキュリティ/05_csrf_クロスサイトリクエストフォージェリ
 	// 一旦分割
-	$tmp = explode('/', $ret);                          // security_セキュリティ, csrf_クロスサイトリクエストフォージェリ
+	$tmp = explode('/', $ret);                          // 01_security_セキュリティ, 05_csrf_クロスサイトリクエストフォージェリ
 	// 構築し直し
 	$ret = '';
 	foreach($tmp as $item){
-		$e = explode('_', $item)[0]; // security_セキュリティ -> security
-		$ret .= '/' . $e;
+		// 数字落とし: 01_security_セキュリティ -> security_セキュリティ
+		$item = preg_replace('/^[0-9]+\_/', '', $item);
+		// 後ろ落とし: security_セキュリティ -> security
+		$item = preg_replace('/\_.*$/', '', $item);
+		// 小文字
+		$item = strtolower($item);
+		// 結合し直し
+		$ret .= '/' . $item;
+		// $item = $e = explode('_', $item)[0]; // 01_security_セキュリティ -> security
+		// $e = explode('_', $item)[0]; // 01_security_セキュリティ -> security
+		// $ret .= '/' . $e;
 	}
 	// 結果
 	return $ret; // /security/csrf
