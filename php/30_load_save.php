@@ -48,8 +48,8 @@ EOS;
 // 拡張リネーム
 // ※ディレクトリが存在しない場合にはディレクトリも自動生成
 function rename_ex($oldname, $newname){
-	mkdir(dirname($newname), 0777, TRUE);
-	rename($oldname, $newname);
+	@mkdir(dirname($newname), 0777, TRUE);
+	@rename($oldname, $newname);
 }
 
 /* セーブ
